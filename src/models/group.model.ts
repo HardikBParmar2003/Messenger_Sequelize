@@ -1,0 +1,55 @@
+import { allow } from "joi";
+import {
+  Table,
+  Model,
+  PrimaryKey,
+  AutoIncrement,
+  Column,
+  DataType,
+  ForeignKey,
+  BelongsTo,
+  CreatedAt,
+  UpdatedAt,
+  DeletedAt,
+  HasMany,
+} from "sequelize-typescript";
+import { User } from "./user.model";
+import { Member } from "./group_member_table.model";
+
+@Table({ tableName: "group_table", timestamps: true, paranoid: true })
+export class Group extends Model<Group> {
+  @PrimaryKey
+  @AutoIncrement
+  @Column(DataType.INTEGER)
+  group_id!: number;
+
+  @ForeignKey(() => User)
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: true,
+  })
+  user_id!: number;
+  @BelongsTo(() => Group, { foreignKey: "user_id" })
+  user!: User;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  group_name!: string;
+
+  @CreatedAt
+  @Column(DataType.DATE)
+  createdAt!: Date;
+
+  @UpdatedAt
+  @Column(DataType.DATE)
+  updatedAt!: Date;
+
+  @DeletedAt
+  @Column(DataType.DATE)
+  deletedAt!: Date;
+
+  @HasMany(() => Member, { foreignKey: "group_id" })
+  groups!: Member[];
+}

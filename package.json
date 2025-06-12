@@ -1,0 +1,38 @@
+{
+  "name": "messenger",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx ts-node src/index.ts",
+    "migration:create": "npx sequelize-cli migration:generate",
+    "migration:run": "npx sequelize-cli db:migrate"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "express": "^5.1.0",
+    "mysql2": "^3.14.1",
+    "nodemailer": "^7.0.3",
+    "path": "^0.12.7",
+    "pg": "^8.16.0",
+    "sequelize": "^6.37.7",
+    "sequelize-cli": "^6.6.3",
+    "sequelize-typescript": "^2.1.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/cookie-parser": "^1.4.9",
+    "@types/dotenv": "^6.1.1",
+    "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/node": "^24.0.0",
+    "@types/nodemailer": "^6.4.17",
+    "@types/typescript": "^0.4.29"
+  }
+}
