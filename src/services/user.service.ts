@@ -4,7 +4,6 @@ import { Otp, User } from "../models";
 import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { date } from "joi";
 dotenv.config();
 
 export const userService = {
@@ -46,7 +45,6 @@ export const userService = {
   async verifyOtp(email: string) {
     try {
       return await userRepository.verifyOtp(email);
-      
     } catch (error) {
       throw error;
     }
@@ -56,11 +54,11 @@ export const userService = {
     try {
       const password: string = await bcrypt.hash(data.password, 10);
       const userData = {
-        first_name:data.first_name,
-        last_name:data.last_name,
-        email:email,
-        password:password
-      }
+        first_name: data.first_name,
+        last_name: data.last_name,
+        email: email,
+        password: password,
+      };
       return userRepository.create(userData as User);
     } catch (error) {
       throw error;
@@ -70,7 +68,6 @@ export const userService = {
   async logIn(data: User) {
     try {
       const userData = await userRepository.logIn(data);
-      // console.log("userdata is",userData?.toJSON());
       const password: string = userData?.password as string;
       const isUser = await bcrypt.compare(data.password, password);
       if (isUser) {
@@ -84,7 +81,9 @@ export const userService = {
           process.env.SECRET_KEY as string,
           { expiresIn: "1h" }
         );
-        return {};
+        return jwtToken;
+      } else {
+        return false;
       }
     } catch (error) {
       throw error;

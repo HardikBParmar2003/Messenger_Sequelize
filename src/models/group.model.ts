@@ -15,6 +15,7 @@ import {
 } from "sequelize-typescript";
 import { User } from "./user.model";
 import { Member } from "./group_member_table.model";
+import { Chat } from "./chat.model";
 
 @Table({ tableName: "group_table", timestamps: true, paranoid: true })
 export class Group extends Model<Group> {
@@ -52,4 +53,7 @@ export class Group extends Model<Group> {
 
   @HasMany(() => Member, { foreignKey: "group_id" })
   groups!: Member[];
+
+  @HasMany(() => Chat, { foreignKey: "group_id" })
+  chat!: Chat[];
 }

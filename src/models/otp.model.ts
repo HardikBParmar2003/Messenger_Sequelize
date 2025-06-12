@@ -6,9 +6,8 @@ import {
   PrimaryKey,
   Table,
   UpdatedAt,
-  Model
+  Model,
 } from "sequelize-typescript";
-
 
 @Table({ tableName: "otp_verification", timestamps: true })
 export class Otp extends Model<Otp> {
@@ -38,5 +37,5 @@ export class Otp extends Model<Otp> {
   updatedAt!: Date;
 
   @Column(DataType.DATE)
-  expiresAt!:Date
+  expiresAt!: Date;
 }

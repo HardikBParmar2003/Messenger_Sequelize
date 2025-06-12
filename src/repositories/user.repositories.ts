@@ -24,7 +24,7 @@ export const userRepository = {
   async create(data: User) {
     try {
       const userData = await User.create(data);
-      return userData
+      return userData;
     } catch (error) {
       throw error;
     }
@@ -60,6 +60,4 @@ export const userRepository = {
       throw error;
     }
   },
-
-  // async creatGroup()
 };

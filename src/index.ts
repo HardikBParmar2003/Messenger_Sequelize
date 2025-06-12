@@ -1,12 +1,9 @@
 import express from 'express';
 import { sequelize } from './config/database';
-// import userRoutes from './routes/user.routes';
-import { Request,Response } from 'express';
 import { router } from './routes/userRoutes';
 const app = express();
 app.use(express.json());
 
-// app.use('/users', userRoutes);
 app.use("/",router)
 
 const PORT = process.env.PORT || 3000;

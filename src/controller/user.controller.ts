@@ -16,8 +16,7 @@ export const userController = {
     try {
       const email: string = req.cookies.user_email;
       const response = await userService.verifyOtp(email);
-      console.log("response is",response);
-      res.json(response)
+      res.json(response);
     } catch (error) {
       throw error;
     }
@@ -36,8 +35,11 @@ export const userController = {
   async logIn(req: Request, res: Response): Promise<void> {
     try {
       const isUser = await userService.logIn(req.body);
+      res.cookie("jwt_token", isUser);
       res.status(200).json(isUser);
-    } catch (error) {}
+    } catch (error) {
+      throw error;
+    }
   },
 
   async findUser(req: Request, res: Response) {

@@ -1,12 +1,12 @@
 import { any } from "joi";
-import { Group } from "../models";
+import { Group, Member } from "../models";
 import { groupRepository } from "../repositories/group.repositories";
 
 export const groupService = {
-  async createGroup(id: number, name: string) {
+  async createGroup(user_id: number, name: string) {
     try {
       const data = {
-        user_id: id,
+        user_id: user_id,
         group_name: name,
       };
       return await groupRepository.createGroup(data as Group);
@@ -15,12 +15,5 @@ export const groupService = {
     }
   },
 
-  async addUser(group_id:number,member_id:number,admin_id:number){
-    try {
-      
-    } catch (error) {
-      throw error
-      
-    }
-  }
+  
 };

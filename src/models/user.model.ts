@@ -12,6 +12,7 @@ import {
 } from "sequelize-typescript";
 import { Group } from "./group.model";
 import { Member } from "./group_member_table.model";
+import { Chat } from "./chat.model";
 
 @Table({ tableName: "users", timestamps: true })
 export class User extends Model<User> {
@@ -61,7 +62,10 @@ export class User extends Model<User> {
 
   @HasMany(() => Group, { foreignKey: "user_id" })
   groups!: Group[];
- 
-  @HasMany(()=>Member,{foreignKey:'user_id'})
-  member!: Member[]
+
+  @HasMany(() => Member, { foreignKey: "user_id" })
+  member!: Member[];
+
+  @HasMany(() => Chat, { foreignKey: "user_id" })
+  chat!: Chat[];
 }
