@@ -1,15 +1,19 @@
 import {
   AutoIncrement,
   BelongsTo,
+  BelongsToMany,
   Column,
+  CreatedAt,
   DataType,
   ForeignKey,
   Model,
   PrimaryKey,
   Table,
+  UpdatedAt,
 } from "sequelize-typescript";
 import { Group } from "./group.model";
 import { User } from "./user.model";
+import { Chat } from "./chat.model";
 
 @Table({ tableName: "group_member_table", timestamps: true })
 export class Member extends Model<Member> {
@@ -33,7 +37,7 @@ export class Member extends Model<Member> {
     allowNull: true,
   })
   admin_id!: number;
-  @BelongsTo(() => User, { foreignKey: "user_id" })
+  @BelongsTo(() => User, { foreignKey: "admin_id" })
   admin!: User;
 
   @ForeignKey(() => User)
@@ -44,4 +48,14 @@ export class Member extends Model<Member> {
   user_id!: number;
   @BelongsTo(() => User, { foreignKey: "user_id" })
   user!: User;
+
+  @CreatedAt
+  @Column(DataType.DATE)
+  createdAt!: Date;
+
+  @UpdatedAt
+  @Column(DataType.DATE)
+  updatedAt!: Date;
+
+
 }

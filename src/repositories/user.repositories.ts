@@ -1,5 +1,4 @@
-import { any } from "joi";
-import { Otp, User } from "../models";
+import { Chat, Otp, User } from "../models";
 import { Op } from "sequelize";
 
 export const userRepository = {
@@ -11,14 +10,27 @@ export const userRepository = {
     }
   },
 
-  async verifyOtp(email: string) {
+  async verifyOtp(email: string, otp: string) {
     try {
-      return await Otp.findAll({
+      const isVerified =  await Otp.findOne({
         where: {
-          email,
+          email: email,
+          otp: otp,
         },
       });
-    } catch (error) {}
+      if(isVerified){
+        await Otp.destroy({
+          where:{
+            email
+          }
+        })
+        return isVerified
+      }else{
+        return false
+      }
+    } catch (error) {
+      throw new Error("Unable to verify otp");
+    }
   },
 
   async create(data: User) {
@@ -58,6 +70,37 @@ export const userRepository = {
       return userData;
     } catch (error) {
       throw error;
+    }
+  },
+
+  async getIndividualUser(user_id: number) {
+    try {
+      return await User.findByPk(user_id);
+    } catch (error) {
+      throw new Error(
+        "Error in user repository when fetching individual user details"
+      );
+    }
+  },
+
+  async getUserWithChat(group_id: number) {
+    try {
+      const data = await Chat.findAll({
+        where: { group_id },
+        attributes: ["message"],
+
+        include: [
+          {
+            model: User,
+            as: "sender",
+            attributes: ["user_id", "first_name", "last_name", "profile_photo"],
+          },
+        ],
+      });
+      return data;
+    } catch (error) {
+      console.log("Error", error);
+      throw new Error("Error while fetching group chats by user");
     }
   },
 };

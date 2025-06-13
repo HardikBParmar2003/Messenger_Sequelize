@@ -9,6 +9,7 @@ import {
   UpdatedAt,
   HasMany,
   ForeignKey,
+  BelongsToMany,
 } from "sequelize-typescript";
 import { Group } from "./group.model";
 import { Member } from "./group_member_table.model";
@@ -36,7 +37,7 @@ export class User extends Model<User> {
   @Column({
     type: DataType.STRING,
     allowNull: false,
-    unique: true,
+    unique: "unique_email_constraint",
   })
   email!: string;
 
@@ -66,6 +67,15 @@ export class User extends Model<User> {
   @HasMany(() => Member, { foreignKey: "user_id" })
   member!: Member[];
 
-  @HasMany(() => Chat, { foreignKey: "user_id" })
-  chat!: Chat[];
+  @HasMany(() => Chat, { foreignKey: "sender_id" })
+  sentchats!: Chat[];
+
+  @HasMany(() => Chat, { foreignKey: "receiver_id" })
+  receivedchats!: Chat[];
+
+  @BelongsToMany(() => Group, () => Chat)
+  groupChat!: Group[];
+
+  @BelongsToMany(() => Group, () => Member)
+  memberGroups!: Group[];
 }

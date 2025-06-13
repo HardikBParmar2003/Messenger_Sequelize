@@ -13,4 +13,15 @@ export const groupController = {
       throw error;
     }
   },
+
+  async getGroups(req: Request, res: Response) {
+    try {
+      console.log("Hello");
+      const user_id: number = req.user?.user_id as number;
+      const groupData = await groupService.getGroups(user_id);
+      res.json(groupData);
+    } catch (error) {
+      throw new Error("Error while fetching your groups");
+    }
+  },
 };

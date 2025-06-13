@@ -15,6 +15,8 @@ module.exports = {
           model: "group_table",
           key: "group_id",
         },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
 
       admin_id: {
@@ -23,6 +25,8 @@ module.exports = {
           model: "users",
           key: "user_id",
         },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
 
       user_id: {
@@ -31,6 +35,8 @@ module.exports = {
           model: "users",
           key: "user_id",
         },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
 
       createdAt: {

@@ -9,42 +9,47 @@ dotenv.config();
 export const userService = {
   async requestOtp(email: string) {
     try {
-      let otp: string = "";
-      for (let i: number = 0; i < 6; i++) {
-        otp += Math.floor(Math.random() * 10);
+      let isExist = await userRepository.findUser(email);
+      if (!isExist.length) {
+        let otp: string = "";
+        for (let i: number = 0; i < 6; i++) {
+          otp += Math.floor(Math.random() * 10);
+        }
+
+        const transporter = nodemailer.createTransport({
+          service: "gmail",
+          auth: {
+            user: "projectmanagement760@gmail.com",
+            pass: "vkpq qkmo mhvk ovzb",
+          },
+        });
+
+        await transporter.sendMail({
+          from: "projectmanagement760@gmail.com",
+          to: email,
+          subject: "OTP Verification",
+          html: otp,
+        });
+        const expiresAt = new Date(Date.now() + 2 * 60 * 1000);
+        const data = {
+          email: email,
+          otp: otp,
+          expiresAt: expiresAt,
+        };
+
+        const otpStoreData = userRepository.storeOtp(data as Otp);
+        return otpStoreData;
+      } else {
+        return false;
       }
-
-      const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: "projectmanagement760@gmail.com",
-          pass: "vkpq qkmo mhvk ovzb",
-        },
-      });
-
-      await transporter.sendMail({
-        from: "projectmanagement760@gmail.com",
-        to: email,
-        subject: "OTP Verification",
-        html: otp,
-      });
-      const expiresAt = new Date(Date.now() + 2 * 60 * 1000);
-      const data = {
-        email: email,
-        otp: otp,
-        expiresAt: expiresAt,
-      };
-
-      const otpStoreData = userRepository.storeOtp(data as Otp);
-      return otpStoreData;
     } catch (error) {
       throw error;
     }
   },
 
-  async verifyOtp(email: string) {
+  async verifyOtp(email: string,otp:string) {
     try {
-      return await userRepository.verifyOtp(email);
+      return await userRepository.verifyOtp(email,otp);
     } catch (error) {
       throw error;
     }
@@ -95,6 +100,24 @@ export const userService = {
       return await userRepository.findUser(value);
     } catch (error) {
       throw error;
+    }
+  },
+
+  async getIndividualUser(user_id: string) {
+    try {
+      return await userRepository.getIndividualUser(Number(user_id));
+    } catch (error) {
+      throw new Error(
+        "Error in user service when fetching individual user details"
+      );
+    }
+  },
+
+  async getUserWithChat(group_id: string) {
+    try {
+      return await userRepository.getUserWithChat(Number(group_id));
+    } catch (error) {
+      throw new Error("Error while fetching group chat data with user");
     }
   },
 };

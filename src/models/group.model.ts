@@ -12,6 +12,7 @@ import {
   UpdatedAt,
   DeletedAt,
   HasMany,
+  BelongsToMany,
 } from "sequelize-typescript";
 import { User } from "./user.model";
 import { Member } from "./group_member_table.model";
@@ -30,7 +31,7 @@ export class Group extends Model<Group> {
     allowNull: true,
   })
   user_id!: number;
-  @BelongsTo(() => Group, { foreignKey: "user_id" })
+  @BelongsTo(() => User, { foreignKey: "user_id" })
   user!: User;
 
   @Column({
@@ -56,4 +57,11 @@ export class Group extends Model<Group> {
 
   @HasMany(() => Chat, { foreignKey: "group_id" })
   chat!: Chat[];
+
+  @BelongsToMany(() => User, () => Chat)
+  usersWhoChatted!: User[];
+
+  @BelongsToMany(()=>User,()=>Member)
+  members!:User[]
+
 }

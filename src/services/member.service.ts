@@ -1,5 +1,5 @@
 import { Member } from "../models";
-import { memberRepositories } from "../repositories/member.repositories";
+import { memberRepository } from "../repositories/member.repositories";
 
 export const memberService = {
   async addUser(group_id: number, member_id: number, admin_id: number) {
@@ -9,12 +9,14 @@ export const memberService = {
         admin_id,
         user_id: member_id,
       };
-      const memberData: Member | false = await memberRepositories.addUser(
+      const memberData: Member | false = await memberRepository.addUser(
         data as Member
       );
       return memberData;
     } catch (error) {
-      throw error;
+      throw new Error("Error while adding this member to group");
     }
   },
+
+
 };

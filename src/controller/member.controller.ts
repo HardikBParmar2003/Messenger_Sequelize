@@ -9,12 +9,14 @@ export const memberController = {
       const admin_id = Number(req.user?.user_id);
       const data = await memberService.addUser(group_id, member_id, admin_id);
       if (data) {
-        res.json("User successfully aded to the group");
+        res.json("User successfully added to the group");
       } else {
         res.json("User already present in group");
       }
     } catch (error) {
+      console.log(error);
       throw error;
     }
   },
+
 };

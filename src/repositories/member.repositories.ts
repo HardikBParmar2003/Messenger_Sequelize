@@ -1,6 +1,6 @@
-import { Member } from "../models";
+import { Group, Member } from "../models";
 
-export const memberRepositories = {
+export const memberRepository = {
   async addUser(data: Member) {
     try {
       const isExist = await Member.findOne({
@@ -16,7 +16,22 @@ export const memberRepositories = {
         return await Member.create(data);
       }
     } catch (error) {
-      throw error;
+      throw new Error("Error while adding this member to group");
     }
   },
+
+  // async getGroups(user_id: number) {
+  //   try {
+  //     const data = await Member.findAll({
+  //       where: {
+  //         user_id: user_id,
+  //       },
+  //       include: {
+  //         model: Group,
+  //         attributes:['group_id','group_name']
+  //       },
+  //     });
+  //     return data
+  //   } catch (error) {}
+  // },
 };

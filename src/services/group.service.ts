@@ -1,6 +1,7 @@
 import { any } from "joi";
 import { Group, Member } from "../models";
 import { groupRepository } from "../repositories/group.repositories";
+import { memberRepository } from "../repositories/member.repositories";
 
 export const groupService = {
   async createGroup(user_id: number, name: string) {
@@ -9,11 +10,32 @@ export const groupService = {
         user_id: user_id,
         group_name: name,
       };
-      return await groupRepository.createGroup(data as Group);
+      const groupData = await groupRepository.createGroup(data as Group);
+      if (groupData) {
+        const group_id: number = groupData.toJSON().group_id;
+        const user_id: number = groupData.toJSON().user_id;
+        const data = {
+          group_id,
+          admin_id: user_id,
+          user_id,
+        };
+        const addUser = await memberRepository.addUser(data as Member);
+        if (addUser) {
+          return addUser;
+        } else {
+          return false;
+        }
+      }
     } catch (error) {
       throw error;
     }
   },
 
-  
+  async getGroups(user_id: number) {
+    try {
+      return await groupRepository.getGroups(user_id);
+    } catch (error) {
+      throw new Error("Error while fetching group data");
+    }
+  },
 };

@@ -13,10 +13,6 @@ import {
 import { User } from "./user.model";
 import { Group } from "./group.model";
 
-enum chatType {
-  Personal = "personal",
-  Group = "group",
-}
 
 @Table({ tableName: "chat_table", timestamps: true })
 export class Chat extends Model<Chat> {
@@ -31,7 +27,7 @@ export class Chat extends Model<Chat> {
     allowNull: true,
   })
   sender_id!: number;
-  @BelongsTo(() => User, { foreignKey: "user_id" })
+  @BelongsTo(() => User, { foreignKey: "sender_id" })
   sender!: User;
 
   @ForeignKey(() => User)
@@ -40,7 +36,7 @@ export class Chat extends Model<Chat> {
     allowNull: true,
   })
   receiver_id!: number;
-  @BelongsTo(() => User, { foreignKey: "user_id" })
+  @BelongsTo(() => User, { foreignKey: "receiver_id" })
   receiver!: User;
 
   @ForeignKey(() => Group)
@@ -49,18 +45,11 @@ export class Chat extends Model<Chat> {
     allowNull: true,
   })
   group_id!: number;
-  @BelongsTo(() => User, { foreignKey: "user_id" })
+  @BelongsTo(() => Group, { foreignKey: "group_id" })
   group!: Group;
 
   @Column(DataType.STRING)
   message!: string;
-
-  @Column({
-    type: DataType.ENUM(...Object.values(chatType)),
-    allowNull: true,
-    defaultValue: null,
-  })
-  chat_type!: chatType;
 
   @CreatedAt
   @Column(DataType.DATE)
