@@ -4,9 +4,11 @@ import { Otp, User } from "../models";
 import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { date } from "joi";
 dotenv.config();
 
 export const userService = {
+
   async requestOtp(email: string) {
     try {
       let isExist = await userRepository.findUser(email);
@@ -47,9 +49,9 @@ export const userService = {
     }
   },
 
-  async verifyOtp(email: string,otp:string) {
+  async verifyOtp(email: string, otp: string) {
     try {
-      return await userRepository.verifyOtp(email,otp);
+      return await userRepository.verifyOtp(email, otp);
     } catch (error) {
       throw error;
     }
@@ -73,20 +75,24 @@ export const userService = {
   async logIn(data: User) {
     try {
       const userData = await userRepository.logIn(data);
-      const password: string = userData?.password as string;
-      const isUser = await bcrypt.compare(data.password, password);
-      if (isUser) {
-        const jwtToken: string = jwt.sign(
-          {
-            user_id: userData?.user_id,
-            email: userData?.email,
-            first_name: userData?.first_name,
-            last_name: userData?.last_name,
-          },
-          process.env.SECRET_KEY as string,
-          { expiresIn: "1h" }
-        );
-        return jwtToken;
+      if (userData) {
+        const password: string = userData?.password as string;
+        const isUser = await bcrypt.compare(data.password, password);
+        if (isUser) {
+          const jwtToken: string = jwt.sign(
+            {
+              user_id: userData?.user_id,
+              email: userData?.email,
+              first_name: userData?.first_name,
+              last_name: userData?.last_name,
+            },
+            process.env.SECRET_KEY as string,
+            { expiresIn: "1h" }
+          );
+          return jwtToken;
+        } else {
+          return false;
+        }
       } else {
         return false;
       }
@@ -118,6 +124,19 @@ export const userService = {
       return await userRepository.getUserWithChat(Number(group_id));
     } catch (error) {
       throw new Error("Error while fetching group chat data with user");
+    }
+  },
+
+  async updateUser(data: User,file:string, user_id: number) {
+    try {
+      const data2 = {
+        first_name:data?.first_name,
+        last_name:data?.last_name,
+        profile_photo:file
+      }
+      return await userRepository.updateUser(data2 as User, user_id);
+    } catch (error) {
+      throw new Error("Error while updating user details");
     }
   },
 };

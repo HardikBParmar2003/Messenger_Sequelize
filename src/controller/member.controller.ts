@@ -14,9 +14,18 @@ export const memberController = {
         res.json("User already present in group");
       }
     } catch (error) {
-      console.log(error);
       throw error;
     }
   },
 
+  async removeUser(req: Request, res: Response) {
+    try {
+      const user_id: number = Number(req.params.user_id);
+      const data = await memberService.removeUser(user_id);
+      res.json(data);
+    } catch (error) {
+      throw new Error("Error while remove user from group");
+    }
+  },
+  
 };

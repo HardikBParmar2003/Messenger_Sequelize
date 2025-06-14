@@ -2,6 +2,7 @@ import { Member } from "../models";
 import { memberRepository } from "../repositories/member.repositories";
 
 export const memberService = {
+  
   async addUser(group_id: number, member_id: number, admin_id: number) {
     try {
       const data = {
@@ -18,5 +19,12 @@ export const memberService = {
     }
   },
 
-
+  async removeUser(user_id:number){
+    try {
+      return await memberRepository.removeUser(user_id)
+    } catch (error) {
+      throw new Error("Error while remove user from group")
+      
+    }
+  }
 };

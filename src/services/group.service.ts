@@ -1,9 +1,14 @@
-import { any } from "joi";
+import { date } from "joi";
 import { Group, Member } from "../models";
 import { groupRepository } from "../repositories/group.repositories";
 import { memberRepository } from "../repositories/member.repositories";
 
+interface updateGroup{
+    group_name:string
+}
+
 export const groupService = {
+
   async createGroup(user_id: number, name: string) {
     try {
       const data = {
@@ -38,4 +43,20 @@ export const groupService = {
       throw new Error("Error while fetching group data");
     }
   },
+
+  async updateGroupData(data:updateGroup,file:string,group_id : string){
+    try {
+      const groupData = {
+        group_name:data?.group_name,
+        profile_photo:file
+      }
+      const id:number = Number(group_id)
+      return await groupRepository.updateGroupData(groupData as unknown as Group,id)
+    } catch (error) {
+      throw new Error("Error while upating group data")
+      
+    }
+  }
+
+
 };

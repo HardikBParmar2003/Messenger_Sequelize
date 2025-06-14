@@ -1,6 +1,7 @@
 import { Group, Member } from "../models";
 
 export const memberRepository = {
+
   async addUser(data: Member) {
     try {
       const isExist = await Member.findOne({
@@ -34,4 +35,18 @@ export const memberRepository = {
   //     return data
   //   } catch (error) {}
   // },
+
+  async removeUser(user_id:number){
+    try {
+      return await Member.destroy({
+        where:{
+          user_id
+        }
+      })
+    } catch (error) {
+      throw new Error("Error while remove user from group")
+      
+    }
+  },
+  
 };

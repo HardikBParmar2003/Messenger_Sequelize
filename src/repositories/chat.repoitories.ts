@@ -2,6 +2,7 @@ import { Chat, User } from "../models";
 import { literal, Op } from "sequelize";
 
 export const chatRepository = {
+  
   async addPersonalChat(data: Chat) {
     try {
       return await Chat.create(data);
@@ -11,6 +12,7 @@ export const chatRepository = {
       );
     }
   },
+
   async getUserChat(admin_id: number, user_id: number) {
     try {
       return await Chat.findAll({
@@ -35,26 +37,32 @@ export const chatRepository = {
       const data = await Chat.findAll({
         where: {
           group_id: {
-            [Op.is]: literal('NULL'),
+            [Op.is]: literal("NULL"),
           },
           [Op.or]: [{ sender_id: user_id }, { receiver_id: user_id }],
         },
-        attributes:[],
-        include:[
+        attributes: [],
+        include: [
           {
-            model:User,
-            as:'sender',
-            attributes:{exclude:['createdAt','updatedAt',"password","email"]}
-          },{
-            model:User,
-            as:'receiver',
-            attributes:{exclude:['createdAt','updatedAt',"password","email"]}
-          }
-        ]
+            model: User,
+            as: "sender",
+            attributes: {
+              exclude: ["createdAt", "updatedAt", "password", "email"],
+            },
+          },
+          {
+            model: User,
+            as: "receiver",
+            attributes: {
+              exclude: ["createdAt", "updatedAt", "password", "email"],
+            },
+          },
+        ],
       });
-      return data
+      return data;
     } catch (error) {
       throw new Error("Error while fetching chat user data");
     }
   },
+  
 };

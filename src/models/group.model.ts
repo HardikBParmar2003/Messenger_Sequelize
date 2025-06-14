@@ -17,6 +17,7 @@ import {
 import { User } from "./user.model";
 import { Member } from "./group_member_table.model";
 import { Chat } from "./chat.model";
+import { Col } from "sequelize/types/utils";
 
 @Table({ tableName: "group_table", timestamps: true, paranoid: true })
 export class Group extends Model<Group> {
@@ -39,6 +40,12 @@ export class Group extends Model<Group> {
     allowNull: false,
   })
   group_name!: string;
+
+  @Column({
+    type:DataType.STRING,
+    allowNull:true
+  })
+  profile_photo!:string
 
   @CreatedAt
   @Column(DataType.DATE)

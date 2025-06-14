@@ -4,6 +4,7 @@ import { chatService } from "../services/chat.service";
 import { Chat } from "../models";
 import { any } from "joi";
 export const chatController = {
+
   async addPersonalChat(req: Request, res: Response) {
     try {
       const sender_id: number = req.user?.user_id as number;
@@ -39,6 +40,7 @@ export const chatController = {
       );
     }
   },
+
   async getUserChat(req: Request, res: Response) {
     try {
       const user_id: number = Number(req.params.user_id);
@@ -63,12 +65,12 @@ export const chatController = {
   async getAllChattingUser(req:Request,res:Response){
     try {
       const user_id:number = Number(req.user?.user_id)
-      console.log("user",user_id);
       const data =  await chatService.getAllChattingUser(user_id)
       res.json(data)
     } catch (error) {
       throw new Error("Error while fetching user")
       
     }
-  }
+  },
+  
 };

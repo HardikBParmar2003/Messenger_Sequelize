@@ -1,16 +1,17 @@
 import { Request, Response } from "express";
 import { userService } from "../services/user.service";
-import { threadCpuUsage } from "process";
-import { userRepository } from "../repositories/user.repositories";
-import { resolveScope } from "sequelize-typescript";
 
 export const userController = {
+
   async requestOTp(req: Request, res: Response): Promise<void> {
     try {
       const data = await userService.requestOtp(req.body.email);
       if (data) {
         res.cookie("user_email", req.body.email);
-        res.status(200).json({data,message:`Mail sent to ${req.body.email} successfully `});
+        res.status(200).json({
+          data,
+          message: `Mail sent to ${req.body.email} successfully `,
+        });
       } else {
         res
           .status(500)
@@ -19,7 +20,7 @@ export const userController = {
           );
       }
     } catch (error) {
-      throw error;
+      res.status(500).json("something went wrong or email does not exists")
     }
   },
 
@@ -50,8 +51,14 @@ export const userController = {
   async logIn(req: Request, res: Response): Promise<void> {
     try {
       const isUser = await userService.logIn(req.body);
-      res.cookie("jwt_token", isUser);
-      res.status(200).json(isUser);
+      if (isUser) {
+        res.cookie("jwt_token", isUser);
+        res.status(200).json(isUser);
+      } else {
+        res
+          .status(500)
+          .json("You are not log in user or credential does not match");
+      }
     } catch (error) {
       throw error;
     }
@@ -80,11 +87,33 @@ export const userController = {
 
   async getUserWithChat(req: Request, res: Response) {
     try {
-      // console.log("Hello");
       const data = await userService.getUserWithChat(req.params.group_id);
       res.json(data);
     } catch (error) {
       throw new Error("Error while fetching group chat data");
+    }
+  },
+
+  async updateUser(req: Request, res: Response) {
+    try {
+      
+      const userData = await userService.updateUser(
+        req.body,
+        req.file?.path as string,
+        req.user?.user_id as number
+      );
+      res.json(userData);
+    } catch (error) {
+      throw new Error("Error while updating user details");
+    }
+  },
+
+  async logOutUser(req: Request, res: Response) {
+    try {
+      res.clearCookie("jwt_token");
+      res.json("Successfully log out");
+    } catch (error) {
+      throw new Error("Error while trying to log out");
     }
   },
 };

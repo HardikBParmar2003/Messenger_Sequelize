@@ -99,8 +99,20 @@ export const userRepository = {
       });
       return data;
     } catch (error) {
-      console.log("Error", error);
       throw new Error("Error while fetching group chats by user");
     }
   },
+
+  async updateUser(data:User,user_id:number){
+    try {
+      return await User.update(data,{
+        where:{
+          user_id
+        }
+      })
+    } catch (error) {
+      throw new Error("Error while updating user detais")
+      
+    }
+  }
 };
