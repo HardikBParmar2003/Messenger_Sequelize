@@ -1,5 +1,7 @@
 import { Chat, Otp, User } from "../models";
 import { Op } from "sequelize";
+import dayjs from "dayjs";
+import { errorMonitor } from "events";
 
 export const userRepository = {
   async storeOtp(data: Otp) {
@@ -10,24 +12,33 @@ export const userRepository = {
     }
   },
 
+  async destroyOtp(email: string) {
+    try {
+      console.log("email is:",email);
+      return await Otp.destroy({
+        where: {
+          email,
+        },
+      });
+    } catch (error) {
+      throw error
+    }
+  },
+
   async verifyOtp(email: string, otp: string) {
     try {
-      const isVerified =  await Otp.findOne({
+      const cutoffDate = new Date(Date.now() - 24 * 60 * 60 * 1000);
+      console.log("cutoff date", cutoffDate);
+      const isVerified = await Otp.findOne({
         where: {
           email: email,
           otp: otp,
+          expiresAt: {
+            [Op.gt]: cutoffDate,
+          },
         },
       });
-      if(isVerified){
-        await Otp.destroy({
-          where:{
-            email
-          }
-        })
-        return isVerified
-      }else{
-        return false
-      }
+      return isVerified
     } catch (error) {
       throw new Error("Unable to verify otp");
     }
@@ -103,16 +114,15 @@ export const userRepository = {
     }
   },
 
-  async updateUser(data:User,user_id:number){
+  async updateUser(data: User, user_id: number) {
     try {
-      return await User.update(data,{
-        where:{
-          user_id
-        }
-      })
+      return await User.update(data, {
+        where: {
+          user_id,
+        },
+      });
     } catch (error) {
-      throw new Error("Error while updating user detais")
-      
+      throw new Error("Error while updating user detais");
     }
-  }
+  },
 };

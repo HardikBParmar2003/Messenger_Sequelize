@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { userService } from "../services/user.service";
+import { userRepository } from "../repositories/user.repositories";
 
 export const userController = {
-
   async requestOTp(req: Request, res: Response): Promise<void> {
     try {
       const data = await userService.requestOtp(req.body.email);
@@ -20,7 +20,7 @@ export const userController = {
           );
       }
     } catch (error) {
-      res.status(500).json("something went wrong or email does not exists")
+      res.status(500).json("something went wrong or email does not exists");
     }
   },
 
@@ -29,6 +29,7 @@ export const userController = {
       const email: string = req.cookies.user_email;
       const response = await userService.verifyOtp(email, req.body.otp);
       if (response) {
+        await userRepository.destroyOtp(email);
         res.json({ response, message: "Otp verified successfully" });
       } else {
         res.json("Otp is wrong");
@@ -96,7 +97,6 @@ export const userController = {
 
   async updateUser(req: Request, res: Response) {
     try {
-      
       const userData = await userService.updateUser(
         req.body,
         req.file?.path as string,

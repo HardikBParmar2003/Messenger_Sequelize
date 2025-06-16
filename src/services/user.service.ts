@@ -38,7 +38,6 @@ export const userService = {
           otp: otp,
           expiresAt: expiresAt,
         };
-
         const otpStoreData = userRepository.storeOtp(data as Otp);
         return otpStoreData;
       } else {
