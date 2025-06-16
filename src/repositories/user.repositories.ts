@@ -1,7 +1,5 @@
 import { Chat, Otp, User } from "../models";
 import { Op } from "sequelize";
-import dayjs from "dayjs";
-import { errorMonitor } from "events";
 
 export const userRepository = {
   async storeOtp(data: Otp) {
@@ -12,16 +10,18 @@ export const userRepository = {
     }
   },
 
-  async destroyOtp(email: string) {
+  async destroyOtp() {
     try {
-      console.log("email is:",email);
+      const now = new Date();
       return await Otp.destroy({
         where: {
-          email,
+          expiresAt: {
+            [Op.lt]: now,
+          },
         },
       });
     } catch (error) {
-      throw error
+      throw error;
     }
   },
 
@@ -38,7 +38,7 @@ export const userRepository = {
           },
         },
       });
-      return isVerified
+      return isVerified;
     } catch (error) {
       throw new Error("Unable to verify otp");
     }

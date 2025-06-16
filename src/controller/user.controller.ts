@@ -29,7 +29,6 @@ export const userController = {
       const email: string = req.cookies.user_email;
       const response = await userService.verifyOtp(email, req.body.otp);
       if (response) {
-        await userRepository.destroyOtp(email);
         res.json({ response, message: "Otp verified successfully" });
       } else {
         res.json("Otp is wrong");
@@ -116,4 +115,6 @@ export const userController = {
       throw new Error("Error while trying to log out");
     }
   },
+
+
 };

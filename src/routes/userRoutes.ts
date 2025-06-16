@@ -6,10 +6,10 @@ import { userMiddleware } from "../middleware/user.middleware";
 import { memberController } from "../controller/member.controller";
 import { chatController } from "../controller/chat.controller";
 import upload from "../middleware/cloudeinarry.middleware";
+import { statusController } from "../controller/status.controller";
 
 export const router = Router();
 router.use(cookieParser());
-
 
 router.post("/sendOtp", upload.none(), userController.requestOTp); // send otp to user
 
@@ -55,7 +55,6 @@ router.post("/signUpUser", upload.none(), userController.create); // new user si
  *         description: Server error or login failed
  */
 router.post("/loginUser", upload.none(), userController.logIn);
-
 
 /**
  * @swagger
@@ -104,27 +103,6 @@ router.post("/loginUser", upload.none(), userController.logIn);
  *         description: Unauthorized - invalid or missing JWT token
  */
 router.post(
-    "/findUser",
-    userMiddleware.isAuthorizedUser,
-    upload.none(),
-    userController.findUser
-  );
-  
-router.post(
-    "/findUser",
-    userMiddleware.isAuthorizedUser,
-    upload.none(),
-    userController.findUser
-  );
-  
-router.post(
-  "/findUser",
-  userMiddleware.isAuthorizedUser,
-  upload.none(),
-  userController.findUser
-);
-
-router.post(
   "/findUser",
   userMiddleware.isAuthorizedUser,
   upload.none(),
@@ -143,14 +121,14 @@ router.get(
   userController.getUserWithChat
 ); //get all user who chatted in group al least once along with their name and details it will help for getting messages in group along with sender
 
-router.post(
+router.put(
   "/updateUserDetails",
   userMiddleware.isAuthorizedUser,
   upload.single("profile"),
   userController.updateUser
 ); // update user details
 
-router.get(
+router.delete(
   "/logOutUser",
   userMiddleware.isAuthorizedUser,
   userController.logOutUser
@@ -169,7 +147,7 @@ router.get(
   groupController.getGroups
 ); // get all group in which logged in user is member does not matter that is user chatted or not
 
-router.post(
+router.put(
   "/updateGroupDetails/:group_id",
   userMiddleware.isAuthorizedUser,
   upload.single("profile"),
@@ -183,7 +161,7 @@ router.post(
   memberController.addUser
 ); // add user to group
 
-router.get(
+router.delete(
   "/removeUserFromGroup",
   userMiddleware.isAuthorizedUser,
   memberController.removeUser
@@ -214,3 +192,16 @@ router.get(
   userMiddleware.isAuthorizedUser,
   chatController.getAllChattingUser
 ); //all user who chatted with log in user personal chat user
+
+router.post(
+  "/uploadStatus",
+  userMiddleware.isAuthorizedUser,
+  upload.single("status"),
+  statusController.uploadStatus
+);
+
+router.delete(
+  "/deleteStatus/:status_id",
+  userMiddleware.isAuthorizedUser,
+  statusController.deleteStatus
+);
