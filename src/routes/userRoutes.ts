@@ -5,7 +5,7 @@ import cookieParser from "cookie-parser";
 import { userMiddleware } from "../middleware/user.middleware";
 import { memberController } from "../controller/member.controller";
 import { chatController } from "../controller/chat.controller";
-import upload from "../middleware/cloudeinarry.middleware";
+import {upload, uploadDocument} from "../middleware/cloudeinarry.middleware";
 import { statusController } from "../controller/status.controller";
 
 export const router = Router();
@@ -196,7 +196,7 @@ router.get(
 router.post(
   "/uploadStatus",
   userMiddleware.isAuthorizedUser,
-  upload.single("status"),
+  uploadDocument.single("status"),
   statusController.uploadStatus
 );
 

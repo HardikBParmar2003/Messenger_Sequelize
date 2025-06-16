@@ -3,8 +3,9 @@ import { statusService } from "../services/status.service";
 export const statusController = {
   async uploadStatus(req: Request, res: Response) {
     try {
+        console.log("hello");
       const description: string = req.body.description;
-      const file: string = req.file?.path as string;
+      const file: string = req.file?.path as string || req.body.status;
       const id: number = req.user?.user_id as number;
       const statusData = await statusService.uploadStatus(
         description,
@@ -13,8 +14,7 @@ export const statusController = {
       );
       res.json(statusData);
     } catch (error) {
-      throw new Error("Error while uploading status");
-    }
+        res.status(500).json({ error: "Error while uploading status" });    }
   },
 
   async deleteStatus(req: Request, res: Response) {

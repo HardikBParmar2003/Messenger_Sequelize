@@ -12,6 +12,7 @@ export const statusService = {
       };
       return await statusRepository.uploadStatus(data as Status);
     } catch (error) {
+        console.log("error",error);
       throw new Error("Error while uploading status");
     }
   },

@@ -11,13 +11,23 @@ cloudinary.config({
   secure: true,
 });
 
-const storage = new CloudinaryStorage({
+const profileStorage = new CloudinaryStorage({
   cloudinary,
-  params: (req, res) => ({
+  params: (req, file) => ({
     folder: "hardik",
-    allowed_formats: ["jpg", "jpeg", "png", "gif"],
+    allowed_formats: ["jpg", "jpeg", "png"],
   }),
 });
 
-const upload: multer.Multer = multer({ storage });
-export default upload;
+const statusStorage = new CloudinaryStorage({
+  cloudinary,
+  params: (req, file) => ({
+    folder: "hardik",
+    resource_type: "auto",
+    allowed_formats: ["jpg", "jpeg", "png", "gif", "mp4"],
+  }),
+});
+
+const upload: multer.Multer = multer({ storage: profileStorage });
+const uploadDocument: multer.Multer = multer({ storage: statusStorage });
+export { upload, uploadDocument };
