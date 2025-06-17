@@ -28,7 +28,6 @@ export const userRepository = {
   async verifyOtp(email: string, otp: string) {
     try {
       const cutoffDate = new Date(Date.now() - 24 * 60 * 60 * 1000);
-      console.log("cutoff date", cutoffDate);
       const isVerified = await Otp.findOne({
         where: {
           email: email,

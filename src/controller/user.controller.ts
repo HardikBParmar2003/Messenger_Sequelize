@@ -1,6 +1,8 @@
-import { Request, Response } from "express";
+import { Request, response, Response } from "express";
 import { userService } from "../services/user.service";
 import { userRepository } from "../repositories/user.repositories";
+import { generatePDF } from "../generatPDF/generatePDF";
+import { request } from "http";
 
 export const userController = {
   async requestOTp(req: Request, res: Response): Promise<void> {
@@ -116,5 +118,13 @@ export const userController = {
     }
   },
 
+  async generatePDFPersonalChat(req: Request, res: Response) {
+    const personalChatPDF = await generatePDF.personalChat(req, res);
+    if (personalChatPDF) {
+      res.json("PDF generate successfully");
+    }else{
+      res.json("No chat data to generate pdf or something went wrong")
 
+    }
+  },
 };

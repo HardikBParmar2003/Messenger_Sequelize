@@ -21,11 +21,13 @@ export const chatRepository = {
             { [Op.and]: [{ sender_id: admin_id }, { receiver_id: user_id }] },
             { [Op.and]: [{ sender_id: user_id }, { receiver_id: admin_id }] },
           ],
+          
         },
 
         attributes: {
-          exclude: ["id", "createdAt", "updatedAt", "group_id"],
+          exclude: ["id", "updatedAt", "group_id"],
         },
+        order: [['createdAt', 'ASC']],
       });
     } catch (error) {
       throw new Error("Error while fetching chat data");

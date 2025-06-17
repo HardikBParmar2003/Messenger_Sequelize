@@ -3,7 +3,6 @@ import { statusService } from "../services/status.service";
 export const statusController = {
   async uploadStatus(req: Request, res: Response) {
     try {
-        console.log("hello");
       const description: string = req.body.description;
       const file: string = req.file?.path as string || req.body.status;
       const id: number = req.user?.user_id as number;

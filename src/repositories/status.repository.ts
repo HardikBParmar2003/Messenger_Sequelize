@@ -6,8 +6,6 @@ export const statusRepository = {
     try {
       return await Status.create(data);
     } catch (error) {
-        console.log("error",error);
-
       throw new Error("Error while uploading status");
     }
   },

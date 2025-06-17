@@ -205,3 +205,6 @@ router.delete(
   userMiddleware.isAuthorizedUser,
   statusController.deleteStatus
 );
+
+
+router.post("/generatePDFPersonalChat",userMiddleware.isAuthorizedUser,userController.generatePDFPersonalChat)
