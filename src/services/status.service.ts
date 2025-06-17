@@ -23,4 +23,22 @@ export const statusService = {
       throw new Error("Error while deleting status");
     }
   },
+
+  async getUserStatus(user_id:number){
+    try {
+      return await statusRepository.getUserStatus(user_id)
+    } catch (error) {
+      throw new Error("Error while fetching user status")
+      
+    }
+  },
+
+  async getAllStatus(user_id:number){
+    try {
+      return await statusRepository.getAllStatus(user_id)
+    } catch (error) {
+      throw new Error("Error while fetching all user status")
+      
+    }
+  }
 };

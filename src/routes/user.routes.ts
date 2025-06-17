@@ -1,21 +1,17 @@
 import { Router } from "express";
 import { userController } from "../controller/user.controller";
-import { groupController } from "../controller/group.controller";
 import cookieParser from "cookie-parser";
 import { userMiddleware } from "../middleware/user.middleware";
-import { memberController } from "../controller/member.controller";
-import { chatController } from "../controller/chat.controller";
-import { upload, uploadDocument } from "../middleware/cloudeinarry.middleware";
-import { statusController } from "../controller/status.controller";
+import { upload } from "../middleware/cloudeinarry.middleware";
 
-export const router = Router();
-router.use(cookieParser());
+export const userRrouter = Router();
+userRrouter.use(cookieParser());
 
-router.post("/sendOtp", upload.none(), userController.requestOTp); // send otp to user
+userRrouter.post("/sendOtp", upload.none(), userController.requestOTp); // send otp to user
 
-router.post("/otpVerification", upload.none(), userController.verifyOtp);
+userRrouter.post("/otpVerification", upload.none(), userController.verifyOtp);
 
-router.post("/signUpUser", upload.none(), userController.create); // new user sign up
+userRrouter.post("/signUpUser", upload.none(), userController.create); // new user sign up
 
 /**
  * @swagger
@@ -54,7 +50,13 @@ router.post("/signUpUser", upload.none(), userController.create); // new user si
  *       500:
  *         description: Server error or login failed
  */
-router.post("/loginUser", upload.none(), userController.logIn);
+userRrouter.post("/loginUser", upload.none(), userController.logIn);
+
+userRrouter.delete(
+  "/logOutUser",
+  userMiddleware.isAuthorizedUser,
+  userController.logOutUser
+); // log out current log in user
 
 /**
  * @swagger
@@ -102,116 +104,38 @@ router.post("/loginUser", upload.none(), userController.logIn);
  *       401:
  *         description: Unauthorized - invalid or missing JWT token
  */
-router.post(
+userRrouter.post(
   "/findUser",
   userMiddleware.isAuthorizedUser,
   upload.none(),
   userController.findUser
 ); // find user bu email first name or last name
 
-router.get(
+userRrouter.get(
   "/getIndividualUser/:user_id",
   userMiddleware.isAuthorizedUser,
   userController.getUserDetails
 ); // get data of individual user from user_id
 
-router.get(
+userRrouter.get(
   "/getGroupChatWithUser/:group_id",
   userMiddleware.isAuthorizedUser,
   userController.getUserWithChat
 ); //get all user who chatted in group al least once along with their name and details it will help for getting messages in group along with sender
 
-router.put(
+userRrouter.put(
   "/updateUserDetails",
   userMiddleware.isAuthorizedUser,
   upload.single("profile"),
   userController.updateUser
 ); // update user details
 
-router.delete(
-  "/logOutUser",
-  userMiddleware.isAuthorizedUser,
-  userController.logOutUser
-); // log out current log in user
-
-router.post(
-  "/createGroup",
-  userMiddleware.isAuthorizedUser,
-  upload.none(),
-  groupController.createGroup
-); // create group
-
-router.get(
-  "/getGroups",
-  userMiddleware.isAuthorizedUser,
-  groupController.getGroups
-); // get all group in which logged in user is member does not matter that is user chatted or not
-
-router.put(
-  "/updateGroupDetails/:group_id",
-  userMiddleware.isAuthorizedUser,
-  upload.single("profile"),
-  groupController.updateGroupData
-);
-
-router.post(
-  "/addToGroup",
-  userMiddleware.isAuthorizedUser,
-  upload.none(),
-  memberController.addUser
-); // add user to group
-
-router.delete(
-  "/removeUserFromGroup",
-  userMiddleware.isAuthorizedUser,
-  memberController.removeUser
-); //remove user from group
-
-router.post(
-  "/personalChat/:receiver_id",
-  userMiddleware.isAuthorizedUser,
-  upload.none(),
-  chatController.addPersonalChat
-); // add personal chat to chat table
-
-router.post(
-  "/groupChat/:group_id",
-  userMiddleware.isAuthorizedUser,
-  upload.none(),
-  chatController.addGroupChat
-); //add group chat message into  chat table
-
-router.get(
-  "/userChat/:user_id",
-  userMiddleware.isAuthorizedUser,
-  chatController.getUserChat
-); // get personal chat with user_id provided by loged inuser
-
-router.get(
-  "/getAllChattingUser",
-  userMiddleware.isAuthorizedUser,
-  chatController.getAllChattingUser
-); //all user who chatted with log in user personal chat user
-
-router.post(
-  "/uploadStatus",
-  userMiddleware.isAuthorizedUser,
-  uploadDocument.single("status"),
-  statusController.uploadStatus
-);
-
-router.delete(
-  "/deleteStatus/:status_id",
-  userMiddleware.isAuthorizedUser,
-  statusController.deleteStatus
-);
-
-router.post(
+userRrouter.post(
   "/generatePDFPersonalChat",
   userMiddleware.isAuthorizedUser,
   userController.generatePDFPersonalChat
 );
-router.get(
+userRrouter.get(
   "/generatePDFGroupChat/:group_id",
   userMiddleware.isAuthorizedUser,
   userController.generatePDFGroupChat

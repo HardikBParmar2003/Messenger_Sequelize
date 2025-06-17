@@ -2,11 +2,12 @@ import { Request, response, Response } from "express";
 import { userService } from "../services/user.service";
 import { generatePersonalChatPDF } from "../generatPDF/personalChat.pdf";
 import { generatGroupChatPDF } from "../generatPDF/groupChat.pdf";
+import { Chat, Otp, User } from "../models";
 
 export const userController = {
   async requestOTp(req: Request, res: Response): Promise<void> {
     try {
-      const data = await userService.requestOtp(req.body.email);
+      const data: false | Otp = await userService.requestOtp(req.body.email);
       if (data) {
         res.cookie("user_email", req.body.email);
         res.status(200).json({
@@ -28,7 +29,10 @@ export const userController = {
   async verifyOtp(req: Request, res: Response) {
     try {
       const email: string = req.cookies.user_email;
-      const response = await userService.verifyOtp(email, req.body.otp);
+      const response: Otp | null = await userService.verifyOtp(
+        email,
+        req.body.otp
+      );
       if (response) {
         res.json({ response, message: "Otp verified successfully" });
       } else {
@@ -42,7 +46,7 @@ export const userController = {
   async create(req: Request, res: Response): Promise<void> {
     try {
       const email: string = req.cookies.user_email;
-      const userData = await userService.create(req.body, email);
+      const userData: User = await userService.create(req.body, email);
       res.json(userData);
     } catch (error) {
       throw error;
@@ -51,7 +55,7 @@ export const userController = {
 
   async logIn(req: Request, res: Response): Promise<void> {
     try {
-      const isUser = await userService.logIn(req.body);
+      const isUser: string | false = await userService.logIn(req.body);
       if (isUser) {
         res.cookie("jwt_token", isUser);
         res.status(200).json(isUser);
@@ -68,7 +72,7 @@ export const userController = {
   async findUser(req: Request, res: Response) {
     try {
       const value: string = req.body.value;
-      const data = await userService.findUser(value);
+      const data: User[] = await userService.findUser(value);
       res.json(data);
     } catch (error) {
       throw error;
@@ -77,7 +81,9 @@ export const userController = {
 
   async getUserDetails(req: Request, res: Response) {
     try {
-      const userData = await userService.getIndividualUser(req.params.user_id);
+      const userData: User | null = await userService.getIndividualUser(
+        req.params.user_id
+      );
       res.json(userData);
     } catch (error) {
       throw new Error(
@@ -88,7 +94,7 @@ export const userController = {
 
   async getUserWithChat(req: Request, res: Response) {
     try {
-      const data = await userService.getUserWithChat(req.params.group_id);
+      const data : Chat[] = await userService.getUserWithChat(req.params.group_id);
       res.json(data);
     } catch (error) {
       throw new Error("Error while fetching group chat data");
@@ -118,22 +124,26 @@ export const userController = {
   },
 
   async generatePDFPersonalChat(req: Request, res: Response) {
-    const personalChatPDF = await generatePersonalChatPDF.personalChat(req, res);
+    const personalChatPDF: boolean = await generatePersonalChatPDF.personalChat(
+      req,
+      res
+    );
     if (personalChatPDF) {
       res.json("PDF generate successfully");
-    }else{
-      res.json("No chat data to generate pdf or something went wrong")
-
+    } else {
+      res.json("No chat data to generate pdf or something went wrong");
     }
   },
 
-  async generatePDFGroupChat(req:Request,res:Response){
-    const groupChatPDF  = await generatGroupChatPDF.groupChatPDF(req,res)
+  async generatePDFGroupChat(req: Request, res: Response) {
+    const groupChatPDF: boolean = await generatGroupChatPDF.groupChatPDF(
+      req,
+      res
+    );
     if (groupChatPDF) {
       res.json("PDF generate successfully");
-    }else{
-      res.json("No chat data to generate pdf or something went wrong")
-
+    } else {
+      res.json("No chat data to generate pdf or something went wrong");
     }
-  }
+  },
 };

@@ -90,7 +90,6 @@ export const generatGroupChatPDF = {
         return false;
       }
     } catch (error) {
-      console.log("error is:", error);
       throw new Error("Error while generating group chat pdf")
     }
   },
