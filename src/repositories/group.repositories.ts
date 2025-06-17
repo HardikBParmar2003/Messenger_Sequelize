@@ -29,14 +29,26 @@ export const groupRepository = {
 
   async updateGroupData(data: Group, group_id: number) {
     try {
-      const data2 =  await Group.update(data, {
+      const data2 = await Group.update(data, {
         where: {
           group_id,
         },
       });
-      return data2
+      return data2;
     } catch (error) {
       throw new Error("Error while updating group data");
+    }
+  },
+
+  async grtGroupData(group_id: number) {
+    try {
+      return await Group.findOne({
+        where: {
+          group_id,
+        },
+      });
+    } catch (error) {
+      return error;
     }
   },
 };

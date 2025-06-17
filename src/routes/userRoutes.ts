@@ -5,7 +5,7 @@ import cookieParser from "cookie-parser";
 import { userMiddleware } from "../middleware/user.middleware";
 import { memberController } from "../controller/member.controller";
 import { chatController } from "../controller/chat.controller";
-import {upload, uploadDocument} from "../middleware/cloudeinarry.middleware";
+import { upload, uploadDocument } from "../middleware/cloudeinarry.middleware";
 import { statusController } from "../controller/status.controller";
 
 export const router = Router();
@@ -206,5 +206,13 @@ router.delete(
   statusController.deleteStatus
 );
 
-
-router.post("/generatePDFPersonalChat",userMiddleware.isAuthorizedUser,userController.generatePDFPersonalChat)
+router.post(
+  "/generatePDFPersonalChat",
+  userMiddleware.isAuthorizedUser,
+  userController.generatePDFPersonalChat
+);
+router.get(
+  "/generatePDFGroupChat/:group_id",
+  userMiddleware.isAuthorizedUser,
+  userController.generatePDFGroupChat
+);

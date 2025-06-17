@@ -97,7 +97,7 @@ export const userRepository = {
     try {
       const data = await Chat.findAll({
         where: { group_id },
-        attributes: ["message"],
+        attributes: ["message","createdAt"],
 
         include: [
           {
