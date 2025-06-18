@@ -8,15 +8,21 @@ import { chatRouter } from "./routes/chat.routes";
 import { groupRouter } from "./routes/group.routes";
 import { memberRouter } from "./routes/member.routes";
 import { statusRouter } from "./routes/status.routes";
+import { callRouter } from "./routes/call.routes";
+import { callWebSocket } from "./webSocket/webSignal";
+import http from 'http'
 
 const app = express();
 app.use(express.json());
+const webSocketServer = http.createServer(app)
+callWebSocket.webSocketSetup(webSocketServer)
 
 app.use("/user", userRrouter);
 app.use("/chat",chatRouter);
 app.use("/group",groupRouter);
 app.use("/member",memberRouter);
 app.use("/status",statusRouter)
+app.use("/call",callRouter)
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 const PORT = process.env.PORT || 3000;

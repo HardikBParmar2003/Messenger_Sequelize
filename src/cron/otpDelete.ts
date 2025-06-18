@@ -3,7 +3,7 @@ import { userRepository } from "../repositories/user.repositories";
 
 export function expiredOtpDelete() {
   try {
-    cron.schedule("0 0 * * *", async () => {
+    cron.schedule("* 17 * * *", async () => {
       await userRepository.destroyOtp();
     });
   } catch (error) {

@@ -3,7 +3,7 @@ import { statusRepository } from "../repositories/status.repository";
 
 export function statusDelete() {
   try {
-    cron.schedule("0 0 * * *", async () => {
+    cron.schedule("* 17 * * *", async () => {
       await statusRepository.expiredStatusDelete();
     });
   } catch (error) {
