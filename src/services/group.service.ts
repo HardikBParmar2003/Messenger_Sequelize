@@ -31,7 +31,7 @@ export const groupService = {
         }
       }
     } catch (error) {
-      throw error;
+      throw new Error("Error while creating group");
     }
   },
 
@@ -50,14 +50,9 @@ export const groupService = {
         profile_photo: file,
       };
       const id: number = Number(group_id);
-      return await groupRepository.updateGroupData(
-        groupData as unknown as Group,
-        id
-      );
+      return await groupRepository.updateGroupData(groupData as Group, id);
     } catch (error) {
       throw new Error("Error while upating group data");
     }
   },
-
-  
 };

@@ -5,7 +5,7 @@ export const groupRepository = {
     try {
       return await Group.create(data);
     } catch (error) {
-      throw error;
+      throw new Error("Error while creating group data");
     }
   },
 
@@ -48,7 +48,7 @@ export const groupRepository = {
         },
       });
     } catch (error) {
-      return error;
+    throw new Error("Can't fetch group data")
     }
   },
 };

@@ -1,7 +1,6 @@
 import { Group, Member } from "../models";
 
 export const memberRepository = {
-
   async addUser(data: Member) {
     try {
       const isExist = await Member.findOne({
@@ -21,32 +20,27 @@ export const memberRepository = {
     }
   },
 
-  // async getGroups(user_id: number) {
-  //   try {
-  //     const data = await Member.findAll({
-  //       where: {
-  //         user_id: user_id,
-  //       },
-  //       include: {
-  //         model: Group,
-  //         attributes:['group_id','group_name']
-  //       },
-  //     });
-  //     return data
-  //   } catch (error) {}
-  // },
-
-  async removeUser(user_id:number){
+  async removeUser(user_id: number) {
     try {
       return await Member.destroy({
-        where:{
-          user_id
-        }
-      })
+        where: {
+          user_id,
+        },
+      });
     } catch (error) {
-      throw new Error("Error while remove user from group")
-      
+      throw new Error("Error while remove user from group");
     }
   },
-  
+
+  async getUser(user_id: number) {
+    try {
+      return await Member.findOne({
+        where: {
+          user_id,
+        },
+      });
+    } catch (error) {
+      throw new Error("Error while checking user");
+    }
+  },
 };

@@ -44,7 +44,7 @@ export const userService = {
         return false;
       }
     } catch (error) {
-      throw error;
+      throw new Error("Error while sinding email");
     }
   },
 
@@ -52,7 +52,7 @@ export const userService = {
     try {
       return await userRepository.verifyOtp(email, otp);
     } catch (error) {
-      throw error;
+      throw new Error("Error while verifying oyp");
     }
   },
 
@@ -67,7 +67,7 @@ export const userService = {
       };
       return userRepository.create(userData as User);
     } catch (error) {
-      throw error;
+      throw new Error("error while creating password");
     }
   },
 
@@ -96,7 +96,7 @@ export const userService = {
         return false;
       }
     } catch (error) {
-      throw error;
+      throw new Error("Log in attemt is unsuccessfull");
     }
   },
 
@@ -104,7 +104,8 @@ export const userService = {
     try {
       return await userRepository.findUser(value);
     } catch (error) {
-      throw error;
+      throw new Error("User details not found")
+      
     }
   },
 
@@ -113,7 +114,7 @@ export const userService = {
       return await userRepository.getIndividualUser(Number(user_id));
     } catch (error) {
       throw new Error(
-        "Error in user service when fetching individual user details"
+        "Error when fetching individual user details"
       );
     }
   },

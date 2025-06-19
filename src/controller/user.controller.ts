@@ -7,6 +7,7 @@ import { Chat, Otp, User } from "../models";
 export const userController = {
   async requestOTp(req: Request, res: Response): Promise<void> {
     try {
+      console.log("hello");
       const data: false | Otp = await userService.requestOtp(req.body.email);
       if (data) {
         res.cookie("user_email", req.body.email);
@@ -15,14 +16,17 @@ export const userController = {
           message: `Mail sent to ${req.body.email} successfully `,
         });
       } else {
-        res
-          .status(500)
-          .json(
-            "User already exist try with different email or something went wrong"
-          );
+        res.status(400).json({
+          data: null,
+          message:
+            "User already exist try with different email or something went wrong",
+        });
       }
     } catch (error) {
-      res.status(500).json("something went wrong or email does not exists");
+      res.status(500).json({
+        data: null,
+        message: "something went wrong or email does not exists",
+      });
     }
   },
 
@@ -34,12 +38,14 @@ export const userController = {
         req.body.otp
       );
       if (response) {
-        res.json({ response, message: "Otp verified successfully" });
+        res
+          .status(200)
+          .json({ data: response, message: "Otp verified successfully" });
       } else {
-        res.json("Otp is wrong");
+        res.status(500).json({ data: null, message: "Otp is wrong" });
       }
     } catch (error) {
-      throw error;
+      res.status(500).json({ data: null, message: "something went wrong" });
     }
   },
 
@@ -47,9 +53,11 @@ export const userController = {
     try {
       const email: string = req.cookies.user_email;
       const userData: User = await userService.create(req.body, email);
-      res.json(userData);
+      res
+        .status(201)
+        .json({ data: userData, message: "User created successfully" });
     } catch (error) {
-      throw error;
+      res.status(500).json({ data: null, message: error });
     }
   },
 
@@ -58,14 +66,14 @@ export const userController = {
       const isUser: string | false = await userService.logIn(req.body);
       if (isUser) {
         res.cookie("jwt_token", isUser);
-        res.status(200).json(isUser);
+        res.status(200).json({ date: isUser, message: "Successfull login" });
       } else {
         res
           .status(500)
           .json("You are not log in user or credential does not match");
       }
     } catch (error) {
-      throw error;
+      res.status(500).json({ data: null, message: error });
     }
   },
 
@@ -73,9 +81,9 @@ export const userController = {
     try {
       const value: string = req.body.value;
       const data: User[] = await userService.findUser(value);
-      res.json(data);
+      res.status(200).json({ data: data, message: "Users find successfully" });
     } catch (error) {
-      throw error;
+      res.status(500).json({ data: null, message: error });
     }
   },
 
@@ -84,20 +92,29 @@ export const userController = {
       const userData: User | null = await userService.getIndividualUser(
         req.params.user_id
       );
-      res.json(userData);
+      if (userData) {
+        res.status(200).json({
+          data: userData,
+          message: "User details fetched successfully",
+        });
+      } else {
+        res.status(400).json({ date: null, message: "User not found" });
+      }
     } catch (error) {
-      throw new Error(
-        "Error in user controller when fetching individual user details"
-      );
+      res.status(500).json({ data: null, message: error });
     }
   },
 
   async getUserWithChat(req: Request, res: Response) {
     try {
-      const data : Chat[] = await userService.getUserWithChat(req.params.group_id);
-      res.json(data);
+      const data: Chat[] = await userService.getUserWithChat(
+        req.params.group_id
+      );
+      res
+        .status(200)
+        .json({ data: data, message: "Chat data retrieve successfully" });
     } catch (error) {
-      throw new Error("Error while fetching group chat data");
+      res.status(500).json({ data: null, message: error });
     }
   },
 
@@ -108,42 +125,60 @@ export const userController = {
         req.file?.path as string,
         req.user?.user_id as number
       );
-      res.json(userData);
+      res
+        .status(200)
+        .json({ data: userData, message: "User details updated successfully" });
     } catch (error) {
-      throw new Error("Error while updating user details");
+      res.status(500).json({ data: null, message: error });
     }
   },
 
   async logOutUser(req: Request, res: Response) {
     try {
       res.clearCookie("jwt_token");
-      res.json("Successfully log out");
+      res.status(200).json({ data: null, message: "Successfully log out" });
     } catch (error) {
-      throw new Error("Error while trying to log out");
+      res.status(500).json({ data: null, message: error });
     }
   },
 
   async generatePDFPersonalChat(req: Request, res: Response) {
-    const personalChatPDF: boolean = await generatePersonalChatPDF.personalChat(
-      req,
-      res
-    );
-    if (personalChatPDF) {
-      res.json("PDF generate successfully");
-    } else {
-      res.json("No chat data to generate pdf or something went wrong");
+    try {
+      const personalChatPDF: boolean =
+        await generatePersonalChatPDF.personalChat(req, res);
+      if (personalChatPDF) {
+        res
+          .status(200)
+          .json({ data: null, message: "PDF generate successfully" });
+      } else {
+        res.status(500).json({
+          data: null,
+          message: "No chat data to generate pdf or something went wrong",
+        });
+      }
+    } catch (error) {
+      res.status(500).json({ data: null, message: error });
     }
   },
 
   async generatePDFGroupChat(req: Request, res: Response) {
-    const groupChatPDF: boolean = await generatGroupChatPDF.groupChatPDF(
-      req,
-      res
-    );
-    if (groupChatPDF) {
-      res.json("PDF generate successfully");
-    } else {
-      res.json("No chat data to generate pdf or something went wrong");
+    try {
+      const groupChatPDF: boolean = await generatGroupChatPDF.groupChatPDF(
+        req,
+        res
+      );
+      if (groupChatPDF) {
+        res
+          .status(200)
+          .json({ data: null, message: "PDF generate successfully" });
+      } else {
+        res.status(500).json({
+          data: null,
+          message: "No chat data to generate pdf or something went wrong",
+        });
+      }
+    } catch (error) {
+      res.status(500).json({ data: null, message: error });
     }
   },
 };

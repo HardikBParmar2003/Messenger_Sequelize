@@ -1,3 +1,4 @@
+import { stat } from "fs/promises";
 import { Status } from "../models";
 import { statusRepository } from "../repositories/status.repository";
 
@@ -18,7 +19,10 @@ export const statusService = {
 
   async deleteStatus(user_id: number, status_id: number) {
     try {
-      return await statusRepository.deleteStatus(user_id, status_id);
+      const status = await statusRepository.getStatus(status_id)
+      if(status){
+        return await statusRepository.deleteStatus(user_id, status_id);
+      }return false
     } catch (error) {
       throw new Error("Error while deleting status");
     }

@@ -6,7 +6,7 @@ export const userRepository = {
     try {
       return await Otp.create(data);
     } catch (error) {
-      throw error;
+      throw new Error("Error while create oyp");
     }
   },
 
@@ -21,7 +21,7 @@ export const userRepository = {
         },
       });
     } catch (error) {
-      throw error;
+      throw new Error("Error whuile deleteing otp")
     }
   },
 
@@ -61,7 +61,7 @@ export const userRepository = {
       });
       return userData?.dataValues;
     } catch (error) {
-      throw error;
+      throw new Error("Unable to find user for log in")
     }
   },
 
@@ -79,7 +79,7 @@ export const userRepository = {
       });
       return userData;
     } catch (error) {
-      throw error;
+      throw new Error("No any user");
     }
   },
 

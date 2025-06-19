@@ -1,10 +1,10 @@
 module.exports = {
   development: {
-    username: "root",
-    password: "Dev@123",
+    username: "postgres",
+    password: "hardik",
     database: "messenger_sequelize",
     host: "localhost",
-    dialect: "mysql",
+    dialect: "postgres",
   },
   test: {
     username: "root",

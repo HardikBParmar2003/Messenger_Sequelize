@@ -18,12 +18,13 @@ export const callController = {
   async endCall(req: Request, res: Response) {
     try {
       //   const { callId, userId } = req.body as { callId: number; userId: number };
-      const user_name:string = req.user?.first_name  + " " + req.user?.last_name 
+      const user_name: string =
+        req.user?.first_name + " " + req.user?.last_name;
       const callId: number = Number(req.params.call_id);
       const call = await callService.endCall(callId, user_name);
-      res.status(200).json({ message: "Call ended notification sent", call });
+      res.status(200).json({data:call, message: "Call ended notification sent" });
     } catch (error: any) {
-      res.status(400).json({ error: error.message });
+      res.status(400).json({ data: null, error: error.message });
     }
   },
 };

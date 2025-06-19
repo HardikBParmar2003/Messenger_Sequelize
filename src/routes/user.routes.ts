@@ -7,15 +7,124 @@ import { upload } from "../middleware/cloudeinarry.middleware";
 export const userRrouter = Router();
 userRrouter.use(cookieParser());
 
+/**
+ * @swagger
+ * /user/sendOtp:
+ *   post:
+ *     summary: Request to send OTP at provided email
+ *     description: Sends an OTP to the user's email address. Expects `email` in form data.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: User's email address to send OTP
+ *                 example: hardik@example.com
+ *     responses:
+ *       200:
+ *         description: OTP sent successfully, cookie set
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   description: OTP data object (structure depends on your Otp model)
+ *                 message:
+ *                   type: string
+ *                   example: Mail sent to hardik@example.com successfully
+ *       400:
+ *         description: User already exists or bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: User already exists. Try with a different email or something went wrong.
+ *       500:
+ *         description: General server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Something went wrong or email does not exist.
+ */
 userRrouter.post("/sendOtp", upload.none(), userController.requestOTp); // send otp to user
 
+
+/**
+ * @swagger
+ * /user/otpVerification:
+ *   post:
+ *     summary: Verification of received otp on email
+ *     description: Enter OTP which is received on email
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - otp
+ *             properties:
+ *               otp:
+ *                 type: number
+ *                 description: OTP received on User's email address 
+ *                 example: 123456
+ *     responses:
+ *       200:
+ *         description: OTP sent successfully, cookie set
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   description: OTP data object (structure depends on your Otp model)
+ *                 message:
+ *                   type: string
+ *                   example: Mail sent to hardik@example.com successfully
+ *       500:
+ *         description: Wrong OTP or OTP does not match or server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Enterd OT
+ */
 userRrouter.post("/otpVerification", upload.none(), userController.verifyOtp);
 
 userRrouter.post("/signUpUser", upload.none(), userController.create); // new user sign up
 
 /**
  * @swagger
- * /loginUser:
+ * /user/loginUser:
  *   post:
  *     summary: User login
  *     description: Logs in user and sets JWT token in cookie.
@@ -60,7 +169,7 @@ userRrouter.delete(
 
 /**
  * @swagger
- * /findUser:
+ * /user/findUser:
  *   post:
  *     summary: Find users by email, first name, or last name
  *     description: Returns a list of users matching the search value.

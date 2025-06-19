@@ -24,7 +24,7 @@ const options = {
       },
     ],
   },
-  apis: ["src/routes/userRoutes.ts"], // your routes path
+  apis: ["src/routes/*.ts"], // your routes path
 };
 
 

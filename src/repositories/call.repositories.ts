@@ -5,7 +5,6 @@ export const callReposirory = {
     try {
       return await Call.create(data);
     } catch (error) {
-      console.log(error);
       throw new Error("Error facing while create call");
     }
   },

@@ -1,7 +1,8 @@
-import { Op,QueryTypes } from "sequelize";
+import { Op, QueryTypes } from "sequelize";
 import { Status } from "../models/status.model";
 import { any } from "joi";
 import { sequelize } from "../config/database";
+import { networkInterfaces } from "os";
 
 export const statusRepository = {
   async uploadStatus(data: Status) {
@@ -66,11 +67,19 @@ export const statusRepository = {
         "SELECT * FROM `status_table` WHERE user_id in (SELECT receiver_id from chat_table WHERE sender_id = ? and receiver_id is NOT NULL UNION SELECT sender_id from chat_table WHERE receiver_id = ? and receiver_id is NOT NULL) and expiresAt > ?",
         {
           replacements: [user_id, user_id, now],
-          type:QueryTypes.SELECT
+          type: QueryTypes.SELECT,
         }
       );
     } catch (error) {
       throw new Error("Error while fetching all user status");
+    }
+  },
+
+  async getStatus(status_id: number) {
+    try {
+      return await Status.findByPk(status_id,{});
+    } catch (error) {
+      throw new Error("Error while fetching status");
     }
   },
 };

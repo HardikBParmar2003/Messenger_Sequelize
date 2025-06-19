@@ -4,7 +4,7 @@ import { User, Otp, Group, Member, Chat, Status, Call } from "../models";
 dotenv.config();
 
 export const sequelize = new Sequelize({
-  dialect: "mysql",
+  dialect: "postgres",
   host: process.env.DB_HOST,
   username: process.env.DB_USER,
   password: process.env.DB_PASS,
