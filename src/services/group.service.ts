@@ -14,7 +14,7 @@ export const groupService = {
         user_id: user_id,
         group_name: name,
       };
-      const groupData = await groupRepository.createGroup(data as Group);
+      const groupData:Group = await groupRepository.createGroup(data as Group);
       if (groupData) {
         const group_id: number = groupData.toJSON().group_id;
         const user_id: number = groupData.toJSON().user_id;

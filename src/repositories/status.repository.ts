@@ -1,8 +1,7 @@
 import { Op, QueryTypes } from "sequelize";
 import { Status } from "../models/status.model";
-import { any } from "joi";
 import { sequelize } from "../config/database";
-import { networkInterfaces } from "os";
+
 
 export const statusRepository = {
   async uploadStatus(data: Status) {

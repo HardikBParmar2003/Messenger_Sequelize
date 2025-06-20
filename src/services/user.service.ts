@@ -11,7 +11,7 @@ dotenv.config();
 export const userService = {
   async requestOtp(email: string) {
     try {
-      let isExist = await userRepository.findUser(email);
+      let isExist:User[] = await userRepository.findUser(email);
       if (!isExist.length) {
         let otp: string = "";
         for (let i: number = 0; i < 6; i++) {
@@ -24,7 +24,7 @@ export const userService = {
           otp: otp,
           expiresAt: expiresAt,
         };
-        const otpStoreData = userRepository.storeOtp(data as Otp);
+        const otpStoreData:Otp = await userRepository.storeOtp(data as Otp);
         return otpStoreData;
       } else {
         return false;
@@ -62,7 +62,7 @@ export const userService = {
       const userData = await userRepository.logIn(data);
       if (userData) {
         const password: string = userData?.password as string;
-        const isUser = await bcrypt.compare(data.password, password);
+        const isUser:boolean = await bcrypt.compare(data.password, password);
         if (isUser) {
           const jwtToken: string = jwt.sign(
             {

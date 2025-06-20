@@ -1,6 +1,7 @@
 import { Group, Member } from "../models";
 
 export const groupRepository = {
+  
   async createGroup(data: Group) {
     try {
       return await Group.create(data);
@@ -29,7 +30,6 @@ export const groupRepository = {
 
   async updateGroupData(data: Group, group_id: number) {
     try {
-      console.log("in group update",data);
       const data2 = await Group.update(data, {
         where: {
           group_id,

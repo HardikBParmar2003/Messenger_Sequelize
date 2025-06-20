@@ -1,7 +1,6 @@
 import { Call, callStatus, User } from "../models";
 import { callReposirory } from "../repositories/call.repositories";
 import { userRepository } from "../repositories/user.repositories";
-import { callWebSocket } from "../webSocket/webSignal";
 export const callService = {
   async startCall(caller_id: number, receiver_id: number) {
     try {
@@ -25,8 +24,6 @@ export const callService = {
 
       const callData = await callReposirory.createCall(data as Call);
 
-      const notified = callWebSocket.notifyIncomingCall(receiver_id, caller);
-      if (!notified) throw new Error("Receiver is not online");
 
       return callData;
     } catch (error) {
@@ -40,8 +37,6 @@ export const callService = {
 
     await callReposirory.updateCallStatus(callId, status as callStatus);
 
-    callWebSocket.notifyCallEnded(call.caller_id, user_name);
-    callWebSocket.notifyCallEnded(call.receiver_id, user_name);
 
     return call;
   },

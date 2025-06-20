@@ -1,9 +1,9 @@
-import { group } from "console";
 import { Group, Member } from "../models";
 import { memberRepository } from "../repositories/member.repositories";
 import { groupRepository } from "../repositories/group.repositories";
 
 export const memberService = {
+
   async addUser(group_id: number, member_id: number, admin_id: number) {
     try {
       const data = {
@@ -22,7 +22,7 @@ export const memberService = {
 
   async removeUser(user_id: number, group_id: number) {
     try {
-      const userData = await memberRepository.getUser(user_id, group_id);
+      const userData : Member | null = await memberRepository.getUser(user_id, group_id);
       if (userData) {
         const admin_id: number = userData?.admin_id as number;
         if (user_id == admin_id) {
@@ -43,7 +43,7 @@ export const memberService = {
             );
             return await memberRepository.removeUser(user_id, group_id);
           } else {
-            const data = await memberRepository.removeUser(user_id, group_id);
+            const data:number = await memberRepository.removeUser(user_id, group_id);
             await groupRepository.deleteGroup(group_id);
             return data;
           }

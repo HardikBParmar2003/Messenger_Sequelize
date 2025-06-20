@@ -20,7 +20,7 @@ export const groupController = {
   async getGroups(req: Request, res: Response) {
     try {
       const user_id: number = req.user?.user_id as number;
-      const groupData = await groupService.getGroups(user_id);
+      const groupData:Group[] = await groupService.getGroups(user_id);
       if (groupData.length > 0) {
         res.status(200).json({
           data: groupData,

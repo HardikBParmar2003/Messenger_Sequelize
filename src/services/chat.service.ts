@@ -44,7 +44,7 @@ export const chatService = {
   async getAllChattingUser(user_id: number) {
     try {
       const data = await chatRepository.getAllChattingUser(user_id);
-      const uniqueUser = new Map<number, any>();
+      const uniqueUser:Map<number,User> = new Map();
       data.forEach((chat) => {
         const otherUserData =
           chat.sender.user_id === user_id ? chat.receiver : chat.sender;

@@ -19,7 +19,7 @@ export const statusService = {
 
   async deleteStatus(user_id: number, status_id: number) {
     try {
-      const status = await statusRepository.getStatus(status_id)
+      const status:Status | null = await statusRepository.getStatus(status_id)
       if(status){
         return await statusRepository.deleteStatus(user_id, status_id);
       }return false
