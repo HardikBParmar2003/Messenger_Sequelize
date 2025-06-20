@@ -19,6 +19,8 @@ statusRouter.delete(
   statusController.deleteStatus
 );
 
+statusRouter.get("/getUserStatus",userMiddleware.isAuthorizedUser,statusController.getUserStatus)
+
 statusRouter.get("/getUserStatus/:user_id",userMiddleware.isAuthorizedUser,statusController.getUserStatus)
 
 statusRouter.get("/getAllStatus",userMiddleware.isAuthorizedUser,statusController.getAllStatus)

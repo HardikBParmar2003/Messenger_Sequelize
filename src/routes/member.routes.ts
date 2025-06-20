@@ -18,3 +18,5 @@ memberRouter.post(
     userMiddleware.isAuthorizedUser,
     memberController.removeUser
   ); //remove user from group
+
+  memberRouter.get("/leftGroup/:group_id",userMiddleware.isAuthorizedUser,memberController.leftGroup)

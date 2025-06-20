@@ -5,10 +5,10 @@ import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { date } from "joi";
+import { sendEmail } from "../emailSender/sendEmail";
 dotenv.config();
 
 export const userService = {
-
   async requestOtp(email: string) {
     try {
       let isExist = await userRepository.findUser(email);
@@ -17,21 +17,7 @@ export const userService = {
         for (let i: number = 0; i < 6; i++) {
           otp += Math.floor(Math.random() * 10);
         }
-
-        const transporter = nodemailer.createTransport({
-          service: "gmail",
-          auth: {
-            user: "projectmanagement760@gmail.com",
-            pass: "vkpq qkmo mhvk ovzb",
-          },
-        });
-
-        await transporter.sendMail({
-          from: "projectmanagement760@gmail.com",
-          to: email,
-          subject: "OTP Verification",
-          html: otp,
-        });
+        const Emaildata = await sendEmail.otpSendEmail(email, otp);
         const expiresAt = new Date(Date.now() + 2 * 60 * 1000);
         const data = {
           email: email,
@@ -44,7 +30,7 @@ export const userService = {
         return false;
       }
     } catch (error) {
-      throw new Error("Error while sinding email");
+      throw new Error("Error while sinding email");``
     }
   },
 
@@ -104,18 +90,15 @@ export const userService = {
     try {
       return await userRepository.findUser(value);
     } catch (error) {
-      throw new Error("User details not found")
-      
+      throw new Error("User details not found");
     }
   },
 
-  async getIndividualUser(user_id: string) {
+  async getIndividualUser(user_id: number) {
     try {
-      return await userRepository.getIndividualUser(Number(user_id));
+      return await userRepository.getIndividualUser(user_id);
     } catch (error) {
-      throw new Error(
-        "Error when fetching individual user details"
-      );
+      throw new Error("Error when fetching individual user details");
     }
   },
 
@@ -127,13 +110,13 @@ export const userService = {
     }
   },
 
-  async updateUser(data: User,file:string, user_id: number) {
+  async updateUser(data: User, file: string, user_id: number) {
     try {
       const data2 = {
-        first_name:data?.first_name,
-        last_name:data?.last_name,
-        profile_photo:file
-      }
+        first_name: data?.first_name,
+        last_name: data?.last_name,
+        profile_photo: file,
+      };
       return await userRepository.updateUser(data2 as User, user_id);
     } catch (error) {
       throw new Error("Error while updating user details");

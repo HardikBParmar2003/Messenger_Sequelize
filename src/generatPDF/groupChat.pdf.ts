@@ -4,19 +4,21 @@ import { Request, Response } from "express";
 import { userRepository } from "../repositories/user.repositories";
 import { groupRepository } from "../repositories/group.repositories";
 import { Group } from "../models";
+import { sendEmail } from "../emailSender/sendEmail";
 export const generatGroupChatPDF = {
   async groupChatPDF(req: Request, res: Response) {
     try {
       const group_id: number = Number(req.params.group_id);
       const user_id: number = req.user?.user_id as number;
-      const group_data: Group = (await groupRepository.grtGroupData(
+      const group_data: Group = (await groupRepository.getGroupData(
         group_id
       )) as Group;
       const group_name: string = group_data.group_name;
       const groupChat = await userRepository.getUserWithChat(group_id);
       if (groupChat.length > 0) {
+        let fileName: string = `${group_name}_group_chat.pdf`;
         const doc = new PDFDocument();
-        doc.pipe(fs.createWriteStream(`${group_name}_group_chat.pdf`));
+        doc.pipe(fs.createWriteStream(fileName));
         doc
           .fontSize(20)
           .font("Times-Roman")
@@ -60,8 +62,8 @@ export const generatGroupChatPDF = {
               .fontSize(10)
               .font("Times-Roman")
               .text(messageTime, { width: 500, align: "right" });
-              yPos += 55;
-            } else {
+            yPos += 55;
+          } else {
             doc
               .fontSize(10)
               .font("Times-Bold")
@@ -71,7 +73,7 @@ export const generatGroupChatPDF = {
               })
               .fontSize(15)
               .font("Times-Roman")
-              .text(msg.message , {
+              .text(msg.message, {
                 width: 500,
                 align: "left",
               })
@@ -85,12 +87,18 @@ export const generatGroupChatPDF = {
           }
         });
         doc.end();
+        let filePath: string = `/home/hardik/Hardik Parmar Trainnig Folder/Sequelize/Messenger postgres/${fileName}`;
+        await sendEmail.chatPDFSendEmail(
+          req.user?.email as string,
+          fileName,
+          filePath
+        );
         return true;
       } else {
         return false;
       }
     } catch (error) {
-      throw new Error("Error while generating group chat pdf")
+      throw new Error("Error while generating group chat pdf");
     }
   },
 };

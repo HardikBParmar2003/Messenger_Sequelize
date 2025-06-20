@@ -55,4 +55,19 @@ export const groupService = {
       throw new Error("Error while upating group data");
     }
   },
+
+  async deleteGroup(group_id: number) {
+    try {
+      const group_data: Group | null = await groupRepository.getGroupData(
+        group_id
+      );
+      if (group_data) {
+        return await groupRepository.deleteGroup(group_id);
+      }else{
+        return false
+      }
+    } catch (error) {
+      throw new Error("Error while deleting group");
+    }
+  },
 };

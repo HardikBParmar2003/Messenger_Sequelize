@@ -70,7 +70,6 @@ userRrouter.use(cookieParser());
  */
 userRrouter.post("/sendOtp", upload.none(), userController.requestOTp); // send otp to user
 
-
 /**
  * @swagger
  * /user/otpVerification:
@@ -88,7 +87,7 @@ userRrouter.post("/sendOtp", upload.none(), userController.requestOTp); // send 
  *             properties:
  *               otp:
  *                 type: number
- *                 description: OTP received on User's email address 
+ *                 description: OTP received on User's email address
  *                 example: 123456
  *     responses:
  *       200:
@@ -116,10 +115,49 @@ userRrouter.post("/sendOtp", upload.none(), userController.requestOTp); // send 
  *                   example: false
  *                 message:
  *                   type: string
- *                   example: Enterd OT
+ *                   example: Enterd OTP is incorrect or something went wrong
  */
 userRrouter.post("/otpVerification", upload.none(), userController.verifyOtp);
 
+/**
+ * @swagger
+ * /user/signUpUser:
+ *   post:
+ *     summary: User Signup
+ *     description: Sign up user y provideing firs name last name and password
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - first_name
+ *               - last_name
+ *               - password
+ *             properties:
+ *               first_name:
+ *                 type: string
+ *                 example: user
+ *               last_name:
+ *                 type: string
+ *                 example: xyz
+ *               password:
+ *                 type: string
+ *                 example: yourPassword123
+ *     responses:
+ *       201:
+ *         description: Successful signup user created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *       401:
+ *         description: Invalid credentials or unauthorized
+ *       500:
+ *         description: Server error or login failed
+ */
 userRrouter.post("/signUpUser", upload.none(), userController.create); // new user sign up
 
 /**
@@ -152,8 +190,34 @@ userRrouter.post("/signUpUser", upload.none(), userController.create); // new us
  *         content:
  *           application/json:
  *             schema:
- *               type: string
- *               example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *               type: object
+ *               data:
+ *                 type: object
+ *                 properties:
+ *                   user_id:
+ *                     type: integer
+ *                     example: 1
+ *                   first_name:
+ *                     type: string
+ *                     example: John
+ *                   last_name:
+ *                     type: string
+ *                     example: Doe
+ *                   email:
+ *                     type: string
+ *                     example: john.doe@example.com
+ *                   password:
+ *                     type: string
+ *                     example: $2b$10$wmZxbwZ4w1bB7ApSaGM6suhCrH7da
+ *                   updatedAt:
+ *                     type: string
+ *                     example: 2025-06-19T13:02:39.592Z
+ *                   createdAt:
+ *                     type: string
+ *                     example: 2025-06-19T13:02:39.592Z
+ *                   profile_photo:
+ *                     type: string
+ *                     example: null
  *       401:
  *         description: Invalid credentials or unauthorized
  *       500:
@@ -161,6 +225,39 @@ userRrouter.post("/signUpUser", upload.none(), userController.create); // new us
  */
 userRrouter.post("/loginUser", upload.none(), userController.logIn);
 
+/**
+ * @swagger
+ * /user/logOutUser:
+ *   delete:
+ *     summary: Logout current user
+ *     description: Current user will logout using this api
+ *     responses:
+ *       200:
+ *         description: log out successfull
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: null
+ *                 message:
+ *                   type: string
+ *                   example: Successfully log out
+ *       500:
+ *         description: General server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Something went wrong or email does not exist.
+ */
 userRrouter.delete(
   "/logOutUser",
   userMiddleware.isAuthorizedUser,
@@ -220,12 +317,236 @@ userRrouter.post(
   userController.findUser
 ); // find user bu email first name or last name
 
+/**
+ * @swagger
+ * /user/getIndividualUser/{user_id}:
+ *   get:
+ *     summary: Get user details by user ID
+ *     description: Get details of a particular user
+ *     parameters:
+ *       - in: path
+ *         name: user_id
+ *         required: true
+ *         description: The ID of the user to get details for
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User details fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     user_id:
+ *                       type: integer
+ *                       example: 1
+ *                     first_name:
+ *                       type: string
+ *                       example: John
+ *                     last_name:
+ *                       type: string
+ *                       example: Doe
+ *                     email:
+ *                       type: string
+ *                       example: john.doe@example.com
+ *                     password:
+ *                       type: string
+ *                       example: $2b$10$wmZxbwZ4w1bB7ApSaGM6suhCrH7da
+ *                     updatedAt:
+ *                       type: string
+ *                       format: date-time
+ *                       example: 2025-06-19T13:02:39.592Z
+ *                     createdAt:
+ *                       type: string
+ *                       format: date-time
+ *                       example: 2025-06-19T13:02:39.592Z
+ *                     profile_photo:
+ *                       type: string
+ *                       nullable: true
+ *                       example: null
+ *                 message:
+ *                   type: string
+ *                   example: User details fetched successfully
+ *       400:
+ *         description: Invalid credentials or unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: "null"
+ *                   nullable: true
+ *                 message:
+ *                   type: string
+ *                   example: User not found
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: "null"
+ *                   nullable: true
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ */
 userRrouter.get(
   "/getIndividualUser/:user_id",
   userMiddleware.isAuthorizedUser,
   userController.getUserDetails
 ); // get data of individual user from user_id
 
+/**
+ * @swagger
+ * /user/getIndividualUser:
+ *   get:
+ *     summary: Get user details by user ID
+ *     description: Get details of a particular user
+ *     responses:
+ *       200:
+ *         description: User details fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     user_id:
+ *                       type: integer
+ *                       example: 1
+ *                     first_name:
+ *                       type: string
+ *                       example: John
+ *                     last_name:
+ *                       type: string
+ *                       example: Doe
+ *                     email:
+ *                       type: string
+ *                       example: john.doe@example.com
+ *                     password:
+ *                       type: string
+ *                       example: $2b$10$wmZxbwZ4w1bB7ApSaGM6suhCrH7da
+ *                     updatedAt:
+ *                       type: string
+ *                       format: date-time
+ *                       example: 2025-06-19T13:02:39.592Z
+ *                     createdAt:
+ *                       type: string
+ *                       format: date-time
+ *                       example: 2025-06-19T13:02:39.592Z
+ *                     profile_photo:
+ *                       type: string
+ *                       nullable: true
+ *                       example: null
+ *                 message:
+ *                   type: string
+ *                   example: User details fetched successfully
+ *       400:
+ *         description: Invalid credentials or unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: "null"
+ *                   nullable: true
+ *                 message:
+ *                   type: string
+ *                   example: User not found
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: "null"
+ *                   nullable: true
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ */
+userRrouter.get(
+  "/getIndividualUser",
+  userMiddleware.isAuthorizedUser,
+  userController.getUserDetails
+);
+
+/**
+ * @swagger
+ * /user/getGroupChatWithUser/{group_id}:
+ *   get:
+ *     summary: Get All chat data in group
+ *     description: Get all chat messages with users who chatted in group at least once, along with their name and details
+ *     parameters:
+ *       - in: path
+ *         name: group_id
+ *         required: true
+ *         description: The ID of the group
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Chat data retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     message:
+ *                       type: string
+ *                       example: this is group message
+ *                     createdAt:
+ *                       type: string
+ *                       format: date-time
+ *                       example: 2025-06-13T10:30:17.000Z
+ *                     sender:
+ *                       type: object
+ *                       properties:
+ *                         user_id:
+ *                           type: integer
+ *                           example: 1
+ *                         first_name:
+ *                           type: string
+ *                           example: hardik
+ *                         last_name:
+ *                           type: string
+ *                           example: parmar
+ *                         profile_photo:
+ *                           type: string
+ *                           example: https://res.cloudinary.com/duy1xfupo/image/upload/v1750076939/hardik/t1utyvqvv2dgj5tv2dj3.jpg
+ *                 message:
+ *                   type: string
+ *                   example: User details fetched successfully
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: "null"
+ *                   nullable: true
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ */
 userRrouter.get(
   "/getGroupChatWithUser/:group_id",
   userMiddleware.isAuthorizedUser,
@@ -244,6 +565,7 @@ userRrouter.post(
   userMiddleware.isAuthorizedUser,
   userController.generatePDFPersonalChat
 );
+
 userRrouter.get(
   "/generatePDFGroupChat/:group_id",
   userMiddleware.isAuthorizedUser,

@@ -6,7 +6,6 @@ export const callController = {
     try {
       const caller_id: number = req.user?.user_id as number;
       const receiver_id: number = Number(req.params.receiver_id);
-      console.log("id ", caller_id, receiver_id);
       const call = await callService.startCall(caller_id, receiver_id);
       if (call) {
         res.status(500).json({ data: call, message: "call started" });

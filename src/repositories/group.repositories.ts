@@ -29,6 +29,7 @@ export const groupRepository = {
 
   async updateGroupData(data: Group, group_id: number) {
     try {
+      console.log("in group update",data);
       const data2 = await Group.update(data, {
         where: {
           group_id,
@@ -40,15 +41,21 @@ export const groupRepository = {
     }
   },
 
-  async grtGroupData(group_id: number) {
+  async getGroupData(group_id: number) {
     try {
-      return await Group.findOne({
-        where: {
-          group_id,
-        },
+      return await Group.findByPk(group_id);
+    } catch (error) {
+      throw new Error("Can't fetch group data");
+    }
+  },
+
+  async deleteGroup(group_id: number) {
+    try {
+      return await Group.destroy({
+        where: { group_id },
       });
     } catch (error) {
-    throw new Error("Can't fetch group data")
+      throw new Error("Error while deleting group");
     }
   },
 };

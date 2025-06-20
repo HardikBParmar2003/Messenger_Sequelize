@@ -15,7 +15,7 @@ groupRouter.post(
   
   groupRouter.get(
     "/getGroups",
-    userMiddleware.isAuthorizedUser,
+    userMiddleware.isAuthorizedUser,  
     groupController.getGroups
   ); // get all group in which logged in user is member does not matter that is user chatted or not
   
@@ -25,3 +25,5 @@ groupRouter.post(
     upload.single("profile"),
     groupController.updateGroupData
   );
+
+  groupRouter.delete("/deleteGroup/:group_id",groupController.deleteGroup)

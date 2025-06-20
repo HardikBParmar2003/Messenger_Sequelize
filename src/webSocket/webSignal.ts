@@ -14,8 +14,6 @@ export const callWebSocket = {
         ws.close();
         return;
       }
-      console.log("ws is : ", ws);
-      console.log("user id is:", user_id);
       onlineUser.set(user_id, ws);
 
       ws.on("message", (msg) => {
@@ -30,7 +28,6 @@ export const callWebSocket = {
       });
       ws.on("close", () => {
         onlineUser.delete(user_id);
-        console.log(`User ${user_id} disconnected`);
       });
     });
   },
@@ -46,8 +43,6 @@ export const callWebSocket = {
 
   async notifyCallEnded(toUserId: number, user_name: string) {
     const ws = onlineUser.get(toUserId);
-    console.log("ro user", toUserId, user_name);
-    console.log("Ws is", ws);
     if (ws) {
       ws.send(JSON.stringify({ type: "call_ended", from: user_name }));
       return true;

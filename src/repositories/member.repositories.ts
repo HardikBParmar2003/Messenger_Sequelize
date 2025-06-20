@@ -20,11 +20,12 @@ export const memberRepository = {
     }
   },
 
-  async removeUser(user_id: number) {
+  async removeUser(user_id: number,group_id:number) {
     try {
       return await Member.destroy({
         where: {
           user_id,
+          group_id
         },
       });
     } catch (error) {
@@ -32,15 +33,44 @@ export const memberRepository = {
     }
   },
 
-  async getUser(user_id: number) {
+  async getUser(user_id: number,group_id:number) {
     try {
       return await Member.findOne({
         where: {
-          user_id,
+        user_id,
+        group_id
+
         },
       });
     } catch (error) {
       throw new Error("Error while checking user");
     }
   },
+
+  async findAllUser(group_id:number){
+    try {
+      return await Member.findAll({
+        where:{
+          group_id
+        }
+      })
+    } catch (error) {
+      throw new Error("Error while fetching all users of a group")
+      
+    }
+  },
+
+  async updateMemberData(data:Member,group_id:number){
+    try {
+      return await Member.update(data,{
+        where:{
+          group_id
+        }
+      })
+    } catch (error) {
+      throw new Error("Error while trying to update admin")
+      
+    }
+
+  }
 };

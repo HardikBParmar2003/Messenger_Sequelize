@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 import { chatRepository } from "../repositories/chat.repoitories";
-import PDFDocument from "pdfkit";
+import PDFDocument, { file } from "pdfkit";
 import fs from "fs";
 import { Chat } from "../../interface";
+import { sendEmail } from "../emailSender/sendEmail";
 export const generatePersonalChatPDF = {
   async personalChat(req: Request, res: Response) {
     const admin_id: number = req.user?.user_id as number;
@@ -13,15 +14,16 @@ export const generatePersonalChatPDF = {
     const user_name: string = req.body.user_name;
     const data: Chat[] = await chatRepository.getUserChat(admin_id, user_id);
     if (data.length > 0) {
+      let fileName = `${admin_name}_${user_name}_chat.pdf`;
       const doc = new PDFDocument();
-      doc.pipe(fs.createWriteStream(`${admin_name}_${user_name}_chat.pdf`));
+      doc.pipe(fs.createWriteStream(fileName));
       doc
         .fontSize(20)
         .font("Times-Roman")
         .text(`Chat Between ${admin_name} and ${user_name}`, {
           align: "center",
         });
-      let yPos:number = 120;
+      let yPos: number = 120;
       let currentDate: string = "";
       data.forEach((msg, index) => {
         doc.fontSize(15);
@@ -63,6 +65,13 @@ export const generatePersonalChatPDF = {
         }
       });
       doc.end();
+
+      let filePath: string = `/home/hardik/Hardik Parmar Trainnig Folder/Sequelize/Messenger postgres/${fileName}`
+      await sendEmail.chatPDFSendEmail(
+        req.user?.email as string,
+        fileName,
+        filePath
+      );
       return true;
     } else {
       return false;

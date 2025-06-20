@@ -1,4 +1,4 @@
-import { Request, response, Response } from "express";
+import { Request, Response } from "express";
 import { userService } from "../services/user.service";
 import { generatePersonalChatPDF } from "../generatPDF/personalChat.pdf";
 import { generatGroupChatPDF } from "../generatPDF/groupChat.pdf";
@@ -7,7 +7,6 @@ import { Chat, Otp, User } from "../models";
 export const userController = {
   async requestOTp(req: Request, res: Response): Promise<void> {
     try {
-      console.log("hello");
       const data: false | Otp = await userService.requestOtp(req.body.email);
       if (data) {
         res.cookie("user_email", req.body.email);
@@ -25,7 +24,7 @@ export const userController = {
     } catch (error) {
       res.status(500).json({
         data: null,
-        message: "something went wrong or email does not exists",
+        message: "Email does not exists or something went wrong",
       });
     }
   },
@@ -89,8 +88,10 @@ export const userController = {
 
   async getUserDetails(req: Request, res: Response) {
     try {
+      const user_id: number =
+        Number(req.params.user_id) || (req.user?.user_id as number);
       const userData: User | null = await userService.getIndividualUser(
-        req.params.user_id
+        user_id
       );
       if (userData) {
         res.status(200).json({
@@ -147,9 +148,11 @@ export const userController = {
       const personalChatPDF: boolean =
         await generatePersonalChatPDF.personalChat(req, res);
       if (personalChatPDF) {
-        res
-          .status(200)
-          .json({ data: null, message: "PDF generate successfully" });
+        res.status(200).json({
+          data: null,
+          message:
+            "PDF generate successfully and sent to your registered Email !!!",
+        });
       } else {
         res.status(500).json({
           data: null,
@@ -168,9 +171,11 @@ export const userController = {
         res
       );
       if (groupChatPDF) {
-        res
-          .status(200)
-          .json({ data: null, message: "PDF generate successfully" });
+        res.status(200).json({
+          data: null,
+          message:
+            "PDF generated successfully and sent to your registered Email !!!",
+        });
       } else {
         res.status(500).json({
           data: null,

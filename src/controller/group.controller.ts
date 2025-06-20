@@ -27,9 +27,7 @@ export const groupController = {
           message: "Group data fetched successfully",
         });
       } else {
-         res
-          .status(200)
-          .json({ data: null, message: "No groups to show" });
+        res.status(200).json({ data: null, message: "No groups to show" });
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
@@ -53,6 +51,25 @@ export const groupController = {
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
+    }
+  },
+
+  async deleteGroup(req: Request, res: Response) {
+    try {
+      const group_id: number = Number(req.params.group_id);
+      const deleteGroup: number | false = await groupService.deleteGroup(
+        group_id
+      );
+      if (deleteGroup != false) {
+        res.status(200).json("Group deleted successfully");
+      } else {
+        res.status(400).json("Group not exist");
+      }
+    } catch (error) {
+      res.status(500).json({
+        data: null,
+        message: "Error occured while try to delete group",
+      });
     }
   },
 };
