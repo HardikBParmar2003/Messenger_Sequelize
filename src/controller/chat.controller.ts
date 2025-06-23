@@ -13,7 +13,7 @@ export const chatController = {
         message
       );
       res
-        .status(200)
+        .status(201)
         .json({ data: chatData, mesage: "chat data added succesfully" });
     } catch (error) {
       res.status(500).json({ data: null, message: error });
@@ -31,7 +31,7 @@ export const chatController = {
         message
       );
       res
-        .status(200)
+        .status(201)
         .json({ data: chatData, mesage: "chat data added succesfully" });
     } catch (error) {
       res.status(500).json({ data: null, message: error });
@@ -42,14 +42,17 @@ export const chatController = {
     try {
       const user_id: number = Number(req.params.user_id);
       const admin_id: number = req.user?.user_id as number;
-      const userChatData:Chat[] = await chatService.getUserChat(admin_id, user_id);
+      const userChatData: Chat[] = await chatService.getUserChat(
+        admin_id,
+        user_id
+      );
       if (userChatData.length > 0) {
         res.status(200).json({
           data: userChatData,
           message: "User chat retrieve successfully",
         });
       } else {
-        res.status(200).json({ data: null, message: "No chat to show" });
+        res.status(204).json({ data: null, message: "No chat to show" });
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
@@ -59,8 +62,14 @@ export const chatController = {
   async getAllChattingUser(req: Request, res: Response) {
     try {
       const user_id: number = Number(req.user?.user_id);
-      const data:User[] = await chatService.getAllChattingUser(user_id);
-      res.json(data);
+      const data: User[] = await chatService.getAllChattingUser(user_id);
+      if (data.length > 0) {
+        res
+          .status(200)
+          .json({ data: data, message: "All data retrieve successfully" });
+      } else {
+        res.status(204).json({ data: null, message: "No data to show" });
+      }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
     }

@@ -80,7 +80,13 @@ export const userController = {
     try {
       const value: string = req.body.value;
       const data: User[] = await userService.findUser(value);
-      res.status(200).json({ data: data, message: "Users find successfully" });
+      if (data.length > 0) {
+        res
+          .status(200)
+          .json({ data: data, message: "Users find successfully" });
+      } else {
+        res.status(204).json({ data: data, message: "No users to show" });
+      }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
     }
@@ -99,7 +105,7 @@ export const userController = {
           message: "User details fetched successfully",
         });
       } else {
-        res.status(400).json({ date: null, message: "User not found" });
+        res.status(404).json({ date: null, message: "User not found" });
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
@@ -111,9 +117,13 @@ export const userController = {
       const data: Chat[] = await userService.getUserWithChat(
         req.params.group_id
       );
-      res
-        .status(200)
-        .json({ data: data, message: "Chat data retrieve successfully" });
+      if (data.length > 0) {
+        res
+          .status(200)
+          .json({ data: data, message: "Chat data retrieve successfully" });
+      } else {
+        res.status(204).json({ data: null, message: "No data to show" });
+      }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
     }
@@ -121,14 +131,18 @@ export const userController = {
 
   async updateUser(req: Request, res: Response) {
     try {
-      const userData = await userService.updateUser(
+      const userData:[affectedCount: number] = await userService.updateUser(
         req.body,
         req.file?.path as string,
         req.user?.user_id as number
       );
-      res
-        .status(200)
-        .json({ data: userData, message: "User details updated successfully" });
+      if(userData[0]!=0){
+        res
+          .status(200)
+          .json({ data: userData, message: "User details updated successfully" });
+      }else{
+        res.status(200).json({data:userData,message:"No details for updating"})
+      }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
     }
@@ -154,7 +168,7 @@ export const userController = {
             "PDF generate successfully and sent to your registered Email !!!",
         });
       } else {
-        res.status(500).json({
+        res.status(204).json({
           data: null,
           message: "No chat data to generate pdf or something went wrong",
         });
@@ -177,7 +191,7 @@ export const userController = {
             "PDF generated successfully and sent to your registered Email !!!",
         });
       } else {
-        res.status(500).json({
+        res.status(204).json({
           data: null,
           message: "No chat data to generate pdf or something went wrong",
         });

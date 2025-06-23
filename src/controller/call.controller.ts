@@ -9,7 +9,7 @@ export const callController = {
       const receiver_id: number = Number(req.params.receiver_id);
       const call: Call = await callService.startCall(caller_id, receiver_id);
       if (call) {
-        res.status(500).json({ data: call, message: "call started" });
+        res.status(200).json({ data: call, message: "call started" });
       }
     } catch (error: any) {
       res.status(500).json({ data: null, message: error.message });

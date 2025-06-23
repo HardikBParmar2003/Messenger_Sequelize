@@ -115,6 +115,7 @@ export const userRepository = {
 
   async updateUser(data: User, user_id: number) {
     try {
+      console.log("data is update",user_id,data);
       return await User.update(data, {
         where: {
           user_id,

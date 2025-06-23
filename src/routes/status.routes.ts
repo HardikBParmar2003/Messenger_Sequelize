@@ -25,3 +25,4 @@ statusRouter.get("/getUserStatus/:user_id",userMiddleware.isAuthorizedUser,statu
 
 statusRouter.get("/getAllStatus",userMiddleware.isAuthorizedUser,statusController.getAllStatus)
 
+  

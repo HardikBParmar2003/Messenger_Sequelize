@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { memberService } from "../services/member.service";
 import { Member } from "../models";
-import { groupService } from "../services/group.service";
 
 export const memberController = {
   async addUser(req: Request, res: Response) {
@@ -14,6 +13,7 @@ export const memberController = {
         member_id,
         admin_id
       );
+      console.log("data is",data);
       if (data != false) {
         res.status(201).json({
           data: data,
@@ -25,6 +25,7 @@ export const memberController = {
           .json({ data: null, mesage: "User already present in group" });
       }
     } catch (error) {
+      console.log(error);
       res.status(500).json({ data: null, message: error });
     }
   },
@@ -43,7 +44,7 @@ export const memberController = {
           message: "User removed from group successfully",
         });
       } else {
-        res.status(500).json("User is not exists in group");
+        res.status(400).json("User is not exists in group");
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
