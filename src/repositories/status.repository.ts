@@ -60,7 +60,6 @@ export const statusRepository = {
 
   async getAllStatus(user_id: number) {
     try {
-      console.log(user_id);
       const now = new Date();
       const query = await sequelize.query(
         `SELECT * FROM status_table WHERE user_id in (SELECT receiver_id from chat_table WHERE sender_id = ? and receiver_id is NOT NULL UNION SELECT sender_id from chat_table WHERE receiver_id = ? and receiver_id is NOT NULL) and "expiresAt" > ?`,
@@ -70,10 +69,8 @@ export const statusRepository = {
           type: QueryTypes.SELECT,
         }
       );
-      console.log("query is:", query);
       return query;
     } catch (error) {
-      console.log(error);
       throw new Error("Error while fetching all user status");
     }
   },

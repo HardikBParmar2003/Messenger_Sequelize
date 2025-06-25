@@ -66,7 +66,7 @@ export const generatePersonalChatPDF = {
       });
       doc.end();
 
-      let filePath: string = `/home/hardik/Hardik Parmar Trainnig Folder/Sequelize/Messenger postgres/${fileName}`
+      let filePath: string = `/home/hardik/Hardik Parmar Trainnig Folder/Sequelize/Messenger postgres/${fileName}`;
       await sendEmail.chatPDFSendEmail(
         req.user?.email as string,
         fileName,

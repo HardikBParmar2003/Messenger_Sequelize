@@ -312,7 +312,7 @@ userRrouter.delete(
  */
 userRrouter.post(
   "/findUser",
-  userMiddleware.isAuthorizedUser,
+userMiddleware.isAuthorizedUser,
   upload.none(),
   userController.findUser
 ); // find user bu email first name or last name

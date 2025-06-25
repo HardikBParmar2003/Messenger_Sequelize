@@ -78,15 +78,16 @@ export const userController = {
 
   async findUser(req: Request, res: Response) {
     try {
-      const value: string = req.body.value;
-      const data: User[] = await userService.findUser(value);
+      const data: User[] = await userService.findUser(req);
       if (data.length > 0) {
         res
           .status(200)
           .json({ data: data, message: "Users find successfully" });
       } else {
-        res.status(204).json({ data: data, message: "No users to show" });
-      }
+        res.status(204).json({ data: data, message: "Users find successfully" });
+
+        // res.status(204).json({ data: data, message: "No users to show" });
+      } 
     } catch (error) {
       res.status(500).json({ data: null, message: error });
     }
@@ -131,17 +132,20 @@ export const userController = {
 
   async updateUser(req: Request, res: Response) {
     try {
-      const userData:[affectedCount: number] = await userService.updateUser(
+      const userData: [affectedCount: number] = await userService.updateUser(
         req.body,
         req.file?.path as string,
         req.user?.user_id as number
       );
-      if(userData[0]!=0){
+      if (userData[0] != 0) {
+        res.status(200).json({
+          data: userData,
+          message: "User details updated successfully",
+        });
+      } else {
         res
           .status(200)
-          .json({ data: userData, message: "User details updated successfully" });
-      }else{
-        res.status(200).json({data:userData,message:"No details for updating"})
+          .json({ data: userData, message: "No details for updating" });
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });

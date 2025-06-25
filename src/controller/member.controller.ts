@@ -13,7 +13,6 @@ export const memberController = {
         member_id,
         admin_id
       );
-      console.log("data is",data);
       if (data != false) {
         res.status(201).json({
           data: data,
@@ -25,7 +24,6 @@ export const memberController = {
           .json({ data: null, mesage: "User already present in group" });
       }
     } catch (error) {
-      console.log(error);
       res.status(500).json({ data: null, message: error });
     }
   },

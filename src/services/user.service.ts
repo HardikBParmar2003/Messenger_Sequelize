@@ -6,12 +6,14 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { date } from "joi";
 import { sendEmail } from "../emailSender/sendEmail";
+import { Request } from "express";
+
 dotenv.config();
 
 export const userService = {
   async requestOtp(email: string) {
     try {
-      let isExist:User[] = await userRepository.findUser(email);
+      let isExist: User[] = await userRepository.getUserByEmail(email);
       if (!isExist.length) {
         let otp: string = "";
         for (let i: number = 0; i < 6; i++) {
@@ -24,13 +26,14 @@ export const userService = {
           otp: otp,
           expiresAt: expiresAt,
         };
-        const otpStoreData:Otp = await userRepository.storeOtp(data as Otp);
+        const otpStoreData: Otp = await userRepository.storeOtp(data as Otp);
         return otpStoreData;
       } else {
         return false;
       }
     } catch (error) {
-      throw new Error("Error while sinding email");``
+      throw new Error("Error while sinding email");
+      ``;
     }
   },
 
@@ -62,7 +65,7 @@ export const userService = {
       const userData = await userRepository.logIn(data);
       if (userData) {
         const password: string = userData?.password as string;
-        const isUser:boolean = await bcrypt.compare(data.password, password);
+        const isUser: boolean = await bcrypt.compare(data.password, password);
         if (isUser) {
           const jwtToken: string = jwt.sign(
             {
@@ -86,9 +89,9 @@ export const userService = {
     }
   },
 
-  async findUser(value: string) {
+  async findUser(req: Request) {
     try {
-      return await userRepository.findUser(value);
+      return await userRepository.findUser(req);
     } catch (error) {
       throw new Error("User details not found");
     }

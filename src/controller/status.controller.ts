@@ -6,15 +6,11 @@ import { Err } from "joi";
 export const statusController = {
   async uploadStatus(req: Request, res: Response) {
     try {
-      console.log("hello");
       const description: string = req.body?.description;
-      console.log(req.file);
       const file: string = (req.file?.path as string) || req.body?.status;
       const id: number = req.user?.user_id as number;
-      console.log("object", description, file);
 
       if (description || file) {
-        console.log("object", description, file);
         const statusData: Status = await statusService.uploadStatus(
           description,
           file,
@@ -29,7 +25,6 @@ export const statusController = {
           .json({ data: null, message: "No status for uploading" });
       }
     } catch (error) {
-      console.log(error);
       res.status(500).json({ data: null, message: error });
     }
   },
@@ -87,7 +82,6 @@ export const statusController = {
         res.status(204).json({ data: null, message: "No status to show" });
       }
     } catch (error) {
-      console.log("error is", error);
       res.status(500).json({ data: null, message: error });
     }
   },

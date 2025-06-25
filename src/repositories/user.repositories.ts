@@ -1,5 +1,6 @@
 import { Chat, Otp, User } from "../models";
 import { Op } from "sequelize";
+import { Request } from "express";
 
 export const userRepository = {
   async storeOtp(data: Otp) {
@@ -21,7 +22,7 @@ export const userRepository = {
         },
       });
     } catch (error) {
-      throw new Error("Error whuile deleteing otp")
+      throw new Error("Error whuile deleteing otp");
     }
   },
 
@@ -61,19 +62,27 @@ export const userRepository = {
       });
       return userData?.dataValues;
     } catch (error) {
-      throw new Error("Unable to find user for log in")
+      throw new Error("Unable to find user for log in");
     }
   },
 
-  async findUser(value: string) {
+  async findUser(req: Request) {
     try {
+      const value: string = req.query.value as string;
+      const page: number = Number(req.query?.page) || 1;
+      const pageSize: number = Number(req.query?.pageSize) || 5;
+      const sortType: string = (req.query?.sortType as string) || "ASC";
+      const sortBy: string = (req.query?.sortBy as string) || "user_id";
       const userData = await User.findAll({
         attributes: { exclude: ["password", "createdAt", "updatedAt"] },
+        limit: pageSize,
+        offset: (page - 1) * pageSize,
+        order: [[sortBy, sortType]],
         where: {
           [Op.or]: [
-            { first_name: { [Op.like]: `%${value}%` } },
-            { last_name: { [Op.like]: `%${value}%` } },
-            { email: { [Op.like]: `%${value}%` } },
+            { first_name: { [Op.iLike]: `%${value}%` } },
+            { last_name: { [Op.iLike]: `%${value}%` } },
+            { email: { [Op.iLike]: `%${value}%` } },
           ],
         },
       });
@@ -97,7 +106,7 @@ export const userRepository = {
     try {
       const data = await Chat.findAll({
         where: { group_id },
-        attributes: ["message","createdAt"],
+        attributes: ["message", "createdAt"],
 
         include: [
           {
@@ -115,7 +124,6 @@ export const userRepository = {
 
   async updateUser(data: User, user_id: number) {
     try {
-      console.log("data is update",user_id,data);
       return await User.update(data, {
         where: {
           user_id,
@@ -123,6 +131,18 @@ export const userRepository = {
       });
     } catch (error) {
       throw new Error("Error while updating user detais");
+    }
+  },
+
+  async getUserByEmail(email: string) {
+    try {
+      return await User.findAll({
+        where: {
+          email: { [Op.iLike]: `%${email}%` },
+        },
+      });
+    } catch (error) {
+      throw new Error("User not found with this email");
     }
   },
 };
