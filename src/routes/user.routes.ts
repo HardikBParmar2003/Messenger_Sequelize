@@ -272,19 +272,42 @@ userRrouter.delete(
  *     description: Returns a list of users matching the search value.
  *     security:
  *       - cookieAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         multipart/form-data:
- *           schema:
- *             type: object
- *             required:
- *               - value
- *             properties:
- *               value:
- *                 type: string
- *                 description: Search string to match against first name, last name or email
- *                 example: john
+ *     parameters:
+ *       - name: value
+ *         in: query
+ *         description: Search string to match against first name, last name or email
+ *         required: false
+ *         schema:
+ *            type: string
+ *            example: hardik
+ *       - name: sortType
+ *         in: query
+ *         description: Enter ASc or DESC on which type you want to sort
+ *         required: false
+ *         schema:
+ *            type: string
+ *            example: ASC
+ *       - name: page
+ *         in: query
+ *         description: Enter page number you want
+ *         required: false
+ *         schema:
+ *            type: number
+ *            example: 1
+ *       - name: pageSize
+ *         in: query
+ *         description: Enter pageSize like how many records you want per page
+ *         required: false
+ *         schema:
+ *            type: number
+ *            example: 10
+ *       - name: sortBy
+ *         in: query
+ *         description: Enter column name you want to apply sorting
+ *         required: false
+ *         schema:
+ *            type: string
+ *            example: user_id
  *     responses:
  *       200:
  *         description: List of matching users
