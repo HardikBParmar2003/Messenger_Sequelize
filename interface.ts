@@ -9,5 +9,4 @@ export interface Chat {
     receiver_id:number;
     message: string;
     createdAt: Date;
-    // add other fields as needed
   }

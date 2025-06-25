@@ -11,7 +11,7 @@ groupRouter.post(
     userMiddleware.isAuthorizedUser,
     upload.none(),
     groupController.createGroup
-  ); // create group
+  ); 
   
   groupRouter.get(
     "/getGroups",

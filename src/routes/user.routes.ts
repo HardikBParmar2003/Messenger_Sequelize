@@ -262,7 +262,7 @@ userRrouter.delete(
   "/logOutUser",
   userMiddleware.isAuthorizedUser,
   userController.logOutUser
-); // log out current log in user
+); 
 
 /**
  * @swagger
@@ -338,7 +338,7 @@ userRrouter.post(
   userMiddleware.isAuthorizedUser,
   upload.none(),
   userController.findUser
-); // find user bu email first name or last name
+); 
 
 /**
  * @swagger
@@ -425,7 +425,7 @@ userRrouter.get(
   "/getIndividualUser/:user_id",
   userMiddleware.isAuthorizedUser,
   userController.getUserDetails
-); // get data of individual user from user_id
+); 
 
 /**
  * @swagger
@@ -581,7 +581,7 @@ userRrouter.put(
   userMiddleware.isAuthorizedUser,
   upload.single("profile"),
   userController.updateUser
-); // update user details
+); 
 
 userRrouter.post(
   "/generatePDFPersonalChat",

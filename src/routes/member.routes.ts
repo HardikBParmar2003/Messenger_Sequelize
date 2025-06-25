@@ -11,12 +11,12 @@ memberRouter.post(
     userMiddleware.isAuthorizedUser,
     upload.none(),
     memberController.addUser
-  ); // add user to group
+  ); 
   
   memberRouter.delete(
     "/removeUserFromGroup",
     userMiddleware.isAuthorizedUser,
     memberController.removeUser
-  ); //remove user from group
+  ); 
 
   memberRouter.get("/leftGroup/:group_id",userMiddleware.isAuthorizedUser,memberController.leftGroup)

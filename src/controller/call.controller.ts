@@ -17,7 +17,6 @@ export const callController = {
   },
   async endCall(req: Request, res: Response) {
     try {
-      //   const { callId, userId } = req.body as { callId: number; userId: number };
       const user_name: string =
         req.user?.first_name + " " + req.user?.last_name;
       const callId: number = Number(req.params.call_id);
