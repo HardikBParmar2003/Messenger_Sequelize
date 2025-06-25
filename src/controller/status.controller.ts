@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { statusService } from "../services/status.service";
 import { Status } from "../models";
-import { Err } from "joi";
+import { date, Err } from "joi";
+import { statusRepository } from "../repositories/status.repository";
 
 export const statusController = {
   async uploadStatus(req: Request, res: Response) {
@@ -60,7 +61,7 @@ export const statusController = {
           .status(200)
           .json({ data: statusData, message: "Status fetched successfully" });
       } else {
-        res.status(204).json({ data: null, message: "No status uploaded" });
+        res.status(204).json()
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
@@ -79,10 +80,31 @@ export const statusController = {
           message: "all status fetched successfully",
         });
       } else {
-        res.status(204).json({ data: null, message: "No status to show" });
+        res.status(204).json()
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
     }
   },
+
+  async searchStatus(req:Request,res:Response){
+    try {
+      const user_id: number = req.user?.user_id as number;
+      const value:string = req.params.value
+      const userStatusData: Object[] = await statusService.searchStatus(
+        user_id,
+        value
+      );
+      if (userStatusData.length > 0) {
+        res.status(200).json({
+          data: userStatusData,
+          message: "all status fetched successfully",
+        });
+      } else {
+        res.status(204).json()
+      }
+    } catch (error) {
+      res.status(500).json({ data: null, message: error });
+    }
+  }
 };

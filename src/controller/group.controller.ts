@@ -26,7 +26,7 @@ export const groupController = {
           message: "Group data fetched successfully",
         });
       } else {
-        res.status(204).json({ data: null, message: "No groups to show" });
+        res.status(204).json()
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });

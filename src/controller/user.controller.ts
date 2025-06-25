@@ -84,10 +84,8 @@ export const userController = {
           .status(200)
           .json({ data: data, message: "Users find successfully" });
       } else {
-        res.status(204).json({ data: data, message: "Users find successfully" });
-
-        // res.status(204).json({ data: data, message: "No users to show" });
-      } 
+        res.status(204).json()
+      }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
     }
@@ -123,7 +121,7 @@ export const userController = {
           .status(200)
           .json({ data: data, message: "Chat data retrieve successfully" });
       } else {
-        res.status(204).json({ data: null, message: "No data to show" });
+        res.status(204).json()
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
@@ -172,10 +170,7 @@ export const userController = {
             "PDF generate successfully and sent to your registered Email !!!",
         });
       } else {
-        res.status(204).json({
-          data: null,
-          message: "No chat data to generate pdf or something went wrong",
-        });
+        res.status(204).json()
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
@@ -195,10 +190,7 @@ export const userController = {
             "PDF generated successfully and sent to your registered Email !!!",
         });
       } else {
-        res.status(204).json({
-          data: null,
-          message: "No chat data to generate pdf or something went wrong",
-        });
+        res.status(204).json()
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });

@@ -52,7 +52,7 @@ export const chatController = {
           message: "User chat retrieve successfully",
         });
       } else {
-        res.status(204).json({ data: null, message: "No chat to show" });
+        res.status(204).json()
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
@@ -68,7 +68,7 @@ export const chatController = {
           .status(200)
           .json({ data: data, message: "All data retrieve successfully" });
       } else {
-        res.status(204).json({ data: null, message: "No data to show" });
+        res.status(204).json()
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });

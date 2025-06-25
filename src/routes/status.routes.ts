@@ -1,6 +1,6 @@
 import { Router } from "express";
 import cookieParser from "cookie-parser";
-import {  uploadDocument } from "../middleware/cloudeinarry.middleware";
+import { uploadDocument } from "../middleware/cloudeinarry.middleware";
 import { userMiddleware } from "../middleware/user.middleware";
 import { statusController } from "../controller/status.controller";
 export const statusRouter = Router();
@@ -19,10 +19,26 @@ statusRouter.delete(
   statusController.deleteStatus
 );
 
-statusRouter.get("/getUserStatus",userMiddleware.isAuthorizedUser,statusController.getUserStatus)
+statusRouter.get(
+  "/getUserStatus",
+  userMiddleware.isAuthorizedUser,
+  statusController.getUserStatus
+);
 
-statusRouter.get("/getUserStatus/:user_id",userMiddleware.isAuthorizedUser,statusController.getUserStatus)
+statusRouter.get(
+  "/getUserStatus/:user_id",
+  userMiddleware.isAuthorizedUser,
+  statusController.getUserStatus
+);
 
-statusRouter.get("/getAllStatus",userMiddleware.isAuthorizedUser,statusController.getAllStatus)
+statusRouter.get(
+  "/getAllStatus",
+  userMiddleware.isAuthorizedUser,
+  statusController.getAllStatus
+);
 
-  
+statusRouter.get(
+  "/getSearchStatus/:value",
+  userMiddleware.isAuthorizedUser,
+  statusController.searchStatus
+);

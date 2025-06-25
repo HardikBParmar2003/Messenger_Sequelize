@@ -75,6 +75,23 @@ export const statusRepository = {
     }
   },
 
+  async searchStatus(user_id: number, value: string) {
+    try {
+      const now = new Date();
+      const query = await sequelize.query(
+        `SELECT * FROM status_table WHERE user_id in (SELECT receiver_id from chat_table WHERE sender_id = ? and receiver_id is NOT NULL UNION SELECT sender_id from chat_table WHERE receiver_id = ? and receiver_id is NOT NULL) and "expiresAt" > ? and ('first_name' iLike ? or 'last_name' iLike ? )`,
+
+        {
+          replacements: [user_id, user_id, now, `%${value}%`,`%${value}%`],
+          type: QueryTypes.SELECT,
+        }
+      );
+      return query;
+    } catch (error) {
+      throw new Error("Error while fetching all user status");
+    }
+  },
+
   async getStatus(status_id: number) {
     try {
       return await Status.findByPk(status_id, {});

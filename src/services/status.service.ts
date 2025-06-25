@@ -1,6 +1,7 @@
 import { stat } from "fs/promises";
 import { Status } from "../models";
 import { statusRepository } from "../repositories/status.repository";
+import { string } from "joi";
 
 export const statusService = {
   async uploadStatus(description: string, status: string, user_id: number) {
@@ -19,30 +20,37 @@ export const statusService = {
 
   async deleteStatus(user_id: number, status_id: number) {
     try {
-      const status:Status | null = await statusRepository.getStatus(status_id)
-      if(status){
+      const status: Status | null = await statusRepository.getStatus(status_id);
+      if (status) {
         return await statusRepository.deleteStatus(user_id, status_id);
-      }return false
+      }
+      return false;
     } catch (error) {
       throw new Error("Error while deleting status");
     }
   },
 
-  async getUserStatus(user_id:number){
+  async getUserStatus(user_id: number) {
     try {
-      return await statusRepository.getUserStatus(user_id)
+      return await statusRepository.getUserStatus(user_id);
     } catch (error) {
-      throw new Error("Error while fetching user status")
-      
+      throw new Error("Error while fetching user status");
     }
   },
 
-  async getAllStatus(user_id:number){
+  async getAllStatus(user_id: number) {
     try {
-      return await statusRepository.getAllStatus(user_id)
+      return await statusRepository.getAllStatus(user_id);
     } catch (error) {
-      throw new Error("Error while fetching all user status")
-      
+      throw new Error("Error while fetching all user status");
     }
-  }
+  },
+
+  async searchStatus(user_id: number, value: string) {
+    try {
+      return await statusRepository.searchStatus(user_id, value);
+    } catch (error) {
+      throw new Error("Error while fetching all user status");
+    }
+  },
 };
