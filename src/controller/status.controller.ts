@@ -98,7 +98,7 @@ export const statusController = {
       if (userStatusData.length > 0) {
         res.status(200).json({
           data: userStatusData,
-          message: "all status fetched successfully",
+          message: "User details fetched successfully",
         });
       } else {
         res.status(204).json()

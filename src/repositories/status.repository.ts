@@ -79,7 +79,7 @@ export const statusRepository = {
     try {
       const now = new Date();
       const query = await sequelize.query(
-        `SELECT * FROM status_table WHERE user_id in (SELECT receiver_id from chat_table WHERE sender_id = ? and receiver_id is NOT NULL UNION SELECT sender_id from chat_table WHERE receiver_id = ? and receiver_id is NOT NULL) and "expiresAt" > ? and ('first_name' iLike ? or 'last_name' iLike ? )`,
+        `SELECT user_id,first_name,last_name,profile_photo FROM users WHERE user_id in (SELECT user_id FROM status_table WHERE user_id in (SELECT receiver_id FROM chat_table WHERE sender_id = ? AND receiver_id is NOT NULL UNION SELECT sender_id FROM chat_table WHERE receiver_id = ? AND sender_id is NOT NULL) AND "expiresAt" > ?) AND (first_name iLike ? or last_name iLike ? )`,
 
         {
           replacements: [user_id, user_id, now, `%${value}%`,`%${value}%`],
