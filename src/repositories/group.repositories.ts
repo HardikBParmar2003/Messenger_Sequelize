@@ -1,8 +1,8 @@
-import { Group, Member } from "../models";
+import { Transaction } from "sequelize/types/transaction";
+import { Group, Member, Permission, Role, RolePermission } from "../models";
 
 export const groupRepository = {
-  
-  async createGroup(data: Group) {
+  async createGroup(data: Group,options?: { transaction?: Transaction }) {
     try {
       return await Group.create(data);
     } catch (error) {

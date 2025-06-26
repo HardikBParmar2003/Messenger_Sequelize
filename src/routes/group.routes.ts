@@ -3,6 +3,8 @@ import cookieParser from "cookie-parser";
 import { upload } from "../middleware/cloudeinarry.middleware";
 import { userMiddleware } from "../middleware/user.middleware";
 import { groupController } from "../controller/group.controller";
+import { permission } from "process";
+import { permissionMiddleware } from "../middleware/permission.middleware";
 export const groupRouter = Router();
 groupRouter.use(cookieParser());
 
@@ -22,8 +24,11 @@ groupRouter.post(
   groupRouter.put(
     "/updateGroupDetails/:group_id",
     userMiddleware.isAuthorizedUser,
+    permissionMiddleware.updatePermission,
     upload.single("profile"),
     groupController.updateGroupData
   );
 
-  groupRouter.delete("/deleteGroup/:group_id",groupController.deleteGroup)
+  groupRouter.delete("/deleteGroup/:group_id",userMiddleware.isAuthorizedUser,permissionMiddleware.deletePermission,groupController.deleteGroup)
+
+  // groupRouter.get("/group/:group_id",userMiddleware.isAuthorizedUser,permissionMiddleware.deletePermission)

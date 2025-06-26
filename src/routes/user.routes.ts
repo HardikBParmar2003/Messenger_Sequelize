@@ -262,7 +262,7 @@ userRrouter.delete(
   "/logOutUser",
   userMiddleware.isAuthorizedUser,
   userController.logOutUser
-); 
+);
 
 /**
  * @swagger
@@ -338,7 +338,7 @@ userRrouter.post(
   userMiddleware.isAuthorizedUser,
   upload.none(),
   userController.findUser
-); 
+);
 
 /**
  * @swagger
@@ -425,7 +425,7 @@ userRrouter.get(
   "/getIndividualUser/:user_id",
   userMiddleware.isAuthorizedUser,
   userController.getUserDetails
-); 
+);
 
 /**
  * @swagger
@@ -576,12 +576,46 @@ userRrouter.get(
   userController.getUserWithChat
 ); //get all user who chatted in group al least once along with their name and details it will help for getting messages in group along with sender
 
+/**
+ * @swagger
+ * /user/updateUserDetails:
+ *   put:
+ *     summary: User Update
+ *     description: Update user by providing data
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               first_name:
+ *                 type: string
+ *                 example: user
+ *               last_name:
+ *                 type: string
+ *                 example: xyz
+ *               profile:
+ *                 type: string
+ *                 format: binary
+ *                 description: Profile image file upload
+ *     responses:
+ *       200:
+ *         description: User details updated successfully or no changes 
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *       500:
+ *         description: Internal Server error 
+ */
 userRrouter.put(
   "/updateUserDetails",
   userMiddleware.isAuthorizedUser,
   upload.single("profile"),
   userController.updateUser
-); 
+);
 
 userRrouter.post(
   "/generatePDFPersonalChat",

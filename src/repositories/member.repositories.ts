@@ -1,13 +1,15 @@
+import Transaction from "sequelize/types/transaction";
 import { Group, Member } from "../models";
 
 export const memberRepository = {
-  async addUser(data: Member) {
+  async addUser(data: Member,options?: { transaction?: Transaction }) {
     try {
       const isExist = await Member.findOne({
         where: {
           group_id: data.group_id,
           admin_id: data.admin_id,
           user_id: data.user_id,
+          role_id:data.role_id
         },
       });
       if (isExist) {

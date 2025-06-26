@@ -1,6 +1,7 @@
 import { groupService } from "../services/group.service";
 import { Request, Response } from "express";
 import { Group } from "../models";
+import { groupRepository } from "../repositories/group.repositories";
 
 export const groupController = {
   async createGroup(req: Request, res: Response) {
@@ -26,7 +27,7 @@ export const groupController = {
           message: "Group data fetched successfully",
         });
       } else {
-        res.status(204).json()
+        res.status(204).json();
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });

@@ -13,7 +13,7 @@ import {
 } from "sequelize-typescript";
 import { Group } from "./group.model";
 import { User } from "./user.model";
-import { Chat } from "./chat.model";
+import { Role } from "./role.model";
 
 @Table({ tableName: "group_member_table", timestamps: true })
 export class Member extends Model<Member> {
@@ -49,6 +49,15 @@ export class Member extends Model<Member> {
   @BelongsTo(() => User, { foreignKey: "user_id" })
   user!: User;
 
+  @ForeignKey(() => Role)
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: true,
+  })
+  role_id!: number;
+  @BelongsTo(() => Role, { foreignKey: "role_id" })
+  role!: Role;
+
   @CreatedAt
   @Column(DataType.DATE)
   createdAt!: Date;
@@ -56,6 +65,4 @@ export class Member extends Model<Member> {
   @UpdatedAt
   @Column(DataType.DATE)
   updatedAt!: Date;
-
-
 }

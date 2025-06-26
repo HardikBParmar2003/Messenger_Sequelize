@@ -2,6 +2,7 @@ import { date } from "joi";
 import { Group, Member } from "../models";
 import { groupRepository } from "../repositories/group.repositories";
 import { memberRepository } from "../repositories/member.repositories";
+import { sequelize } from "../config/database";
 
 interface updateGroup {
   group_name: string;
@@ -9,33 +10,44 @@ interface updateGroup {
 
 export const groupService = {
   async createGroup(user_id: number, name: string) {
+    const t = await sequelize.transaction();
     try {
       const data = {
         user_id: user_id,
         group_name: name,
+
       };
-      const groupData:Group = await groupRepository.createGroup(data as Group);
+      const groupData:Group = await groupRepository.createGroup({ user_id, group_name: name } as Group,
+      { transaction: t })
       if (groupData) {
+        
         const group_id: number = groupData.toJSON().group_id;
         const user_id: number = groupData.toJSON().user_id;
         const data = {
           group_id,
           admin_id: user_id,
           user_id,
+          role_id:1
         };
-        const addUser = await memberRepository.addUser(data as Member);
+        const addUser = await memberRepository.addUser(data as Member,{transaction:t});
         if (addUser) {
+          await t.commit()
           return addUser;
         } else {
           return false;
         }
+      }else{
+        await t.rollback()
+        return false
       }
     } catch (error) {
+      await t.rollback()
       throw new Error("Error while creating group");
     }
   },
 
   async getGroups(user_id: number) {
+    
     try {
       return await groupRepository.getGroups(user_id);
     } catch (error) {

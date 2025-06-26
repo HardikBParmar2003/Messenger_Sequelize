@@ -3,6 +3,7 @@ import cookieParser from "cookie-parser";
 import { upload } from "../middleware/cloudeinarry.middleware";
 import { userMiddleware } from "../middleware/user.middleware";
 import { memberController } from "../controller/member.controller";
+import { permissionMiddleware } from "../middleware/permission.middleware";
 export const memberRouter = Router();
 memberRouter.use(cookieParser());
 
@@ -16,6 +17,7 @@ memberRouter.post(
   memberRouter.delete(
     "/removeUserFromGroup",
     userMiddleware.isAuthorizedUser,
+    permissionMiddleware.removeMemberPermission,
     memberController.removeUser
   ); 
 

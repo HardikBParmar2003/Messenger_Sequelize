@@ -10,6 +10,7 @@ export const memberService = {
         group_id,
         admin_id,
         user_id: member_id,
+        role_id:2
       };
       const memberData: Member | false = await memberRepository.addUser(
         data as Member
@@ -32,10 +33,12 @@ export const memberService = {
           if (memberData.length > 1) {
             const data = {
               user_id: memberData[1].user_id,
+              
             };
             await groupRepository.updateGroupData(data as Group, group_id);
             const updatedMemberData = {
               admin_id: memberData[1].user_id,
+              role_id:1
             };
             await memberRepository.updateMemberData(
               updatedMemberData as Member,
