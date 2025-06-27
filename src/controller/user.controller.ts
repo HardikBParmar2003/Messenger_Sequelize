@@ -66,7 +66,7 @@ export const userController = {
       const isUser: string | false = await userService.logIn(req.body);
       if (isUser) {
         res.cookie("jwt_token", isUser);
-        res.status(200).json({ date: isUser, message: "Successfull login" });
+        res.status(200).json({ data: isUser, message: "Successfull login" });
       } else {
         res
           .status(500)
