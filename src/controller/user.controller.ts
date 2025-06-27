@@ -71,8 +71,9 @@ export const userController = {
           .status(500)
           .json("You are not log in user or credential does not match");
       }
-    } catch (error) {
-      res.status(500).json({ data: null, message: error });
+    } catch (error:any) {
+      console.error(error)
+      res.status(500).json({ data: null, message: error.message });
     }
   },
 
