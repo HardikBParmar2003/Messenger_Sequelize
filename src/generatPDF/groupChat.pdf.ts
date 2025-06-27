@@ -17,8 +17,9 @@ export const generatGroupChatPDF = {
       const groupChat = await userRepository.getUserWithChat(group_id);
       if (groupChat.length > 0) {
         let fileName: string = `${group_name}_group_chat.pdf`;
+        let filePath: string = `/home/hardik/Hardik Parmar Trainnig Folder/Sequelize/Messenger postgres/public/assets/${fileName}`;
         const doc = new PDFDocument();
-        doc.pipe(fs.createWriteStream(fileName));
+        doc.pipe(fs.createWriteStream(filePath));
         doc
           .fontSize(20)
           .font("Times-Roman")
@@ -87,7 +88,6 @@ export const generatGroupChatPDF = {
           }
         });
         doc.end();
-        let filePath: string = `/home/hardik/Hardik Parmar Trainnig Folder/Sequelize/Messenger postgres/${fileName}`;
         await sendEmail.chatPDFSendEmail(
           req.user?.email as string,
           fileName,

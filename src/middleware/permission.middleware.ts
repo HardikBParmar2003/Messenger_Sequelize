@@ -71,7 +71,7 @@ export const permissionMiddleware = {
   ) {
     try {
       const user_id: number = req.user?.user_id as number;
-      const group_id: number = Number(req.params.group_id);
+      const group_id: number = Number(req.body.group_id);
       const permission: string = "remove_member";
       const role = await rolePermissionService.getRole(user_id, group_id);
       if (role?.role.role == "admin") {
