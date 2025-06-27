@@ -3,6 +3,7 @@ import { Group, Member } from "../models";
 import { groupRepository } from "../repositories/group.repositories";
 import { memberRepository } from "../repositories/member.repositories";
 import { sequelize } from "../config/database";
+import e from "express";
 
 interface updateGroup {
   group_name: string;
@@ -41,6 +42,7 @@ export const groupService = {
         return false
       }
     } catch (error) {
+      console.error(error)
       await t.rollback()
       throw new Error("Error while creating group");
     }
