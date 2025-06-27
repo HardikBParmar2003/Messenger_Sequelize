@@ -64,6 +64,7 @@ export const userController = {
     try {
       console.error("hello in async log in:",req.body)
       const isUser: string | false = await userService.logIn(req.body);
+      console.error("is user is:",isUser)
       if (isUser) {
         res.cookie("jwt_token", isUser);
         res.status(200).json({ data: isUser, message: "Successfull login" });

@@ -12,8 +12,8 @@ export const groupController = {
       res
         .status(201)
         .json({ data: data, message: "Group created syuccessfully" });
-    } catch (error) {
-      res.status(500).json({ data: null, message: error });
+    } catch (error:any) {
+      res.status(500).json({ data: null, message: error.message });
     }
   },
 

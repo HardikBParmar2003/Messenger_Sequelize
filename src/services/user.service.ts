@@ -85,6 +85,7 @@ export const userService = {
         return false;
       }
     } catch (error) {
+      console.error(error)
       throw new Error("Log in attemt is unsuccessfull");
     }
   },
