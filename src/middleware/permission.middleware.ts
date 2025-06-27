@@ -50,12 +50,15 @@ export const permissionMiddleware = {
         } else {
           res.status(403).json({
             data: role?.role.role,
+            data2:role,
+            data3:hasPermission,
             message: "You don't have permission to update group",
           });
         }
       } else {
         res.status(403).json({
           data: role?.role.role,
+          data2:role,
           message: "You don't have permission to update group",
         });
       }
