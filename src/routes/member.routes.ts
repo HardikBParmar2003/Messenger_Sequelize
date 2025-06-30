@@ -10,6 +10,7 @@ memberRouter.use(cookieParser());
 memberRouter.post(
     "/addToGroup",
     userMiddleware.isAuthorizedUser,
+    permissionMiddleware.addmember,
     upload.none(),
     memberController.addUser
   ); 

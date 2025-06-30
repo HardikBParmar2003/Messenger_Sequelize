@@ -2,7 +2,7 @@ import { Transaction } from "sequelize/types/transaction";
 import { Group, Member, Permission, Role, RolePermission } from "../models";
 
 export const groupRepository = {
-  async createGroup(data: Group,options?: { transaction?: Transaction }) {
+  async createGroup(data: Group, options?: { transaction?: Transaction }) {
     try {
       return await Group.create(data);
     } catch (error) {
@@ -56,6 +56,18 @@ export const groupRepository = {
       });
     } catch (error) {
       throw new Error("Error while deleting group");
+    }
+  },
+  async groupExist(user_id: number, group_name: string) {
+    try {
+      return await Group.findOne({
+        where: {
+          user_id,
+          group_name,
+        },
+      });
+    } catch (error) {
+      throw new Error("Error while checking group");
     }
   },
 };

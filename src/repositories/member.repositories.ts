@@ -1,5 +1,5 @@
 import Transaction from "sequelize/types/transaction";
-import { Group, Member } from "../models";
+import {  Member } from "../models";
 
 export const memberRepository = {
   async addUser(data: Member,options?: { transaction?: Transaction }) {

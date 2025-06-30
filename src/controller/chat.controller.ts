@@ -7,14 +7,18 @@ export const chatController = {
       const sender_id: number = req.user?.user_id as number;
       const receiver_id: number = Number(req.params.receiver_id);
       const message: string = req.body.message;
-      const chatData: Chat = await chatService.addPersonalChat(
-        sender_id,
-        receiver_id,
-        message
-      );
-      res
-        .status(201)
-        .json({ data: chatData, mesage: "chat data added succesfully" });
+      if (message) {
+        const chatData: Chat = await chatService.addPersonalChat(
+          sender_id,
+          receiver_id,
+          message
+        );
+        res
+          .status(201)
+          .json({ data: chatData, mesage: "chat data added succesfully" });
+      } else {
+        res.status(400).json({ data: null, mesage: "Message can't be empty" });
+      }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
     }
@@ -25,14 +29,18 @@ export const chatController = {
       const sender_id: number = req.user?.user_id as number;
       const group_id: number = Number(req.params.group_id);
       const message: string = req.body.message;
-      const chatData: Chat = await chatService.addGroupChat(
-        sender_id,
-        group_id,
-        message
-      );
-      res
-        .status(201)
-        .json({ data: chatData, mesage: "chat data added succesfully" });
+      if (message) {
+        const chatData: Chat = await chatService.addGroupChat(
+          sender_id,
+          group_id,
+          message
+        );
+        res
+          .status(201)
+          .json({ data: chatData, mesage: "chat data added succesfully" });
+      } else {
+        res.status(400).json({ data: null, mesage: "Message can't be empty" });
+      }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
     }
@@ -52,7 +60,7 @@ export const chatController = {
           message: "User chat retrieve successfully",
         });
       } else {
-        res.status(204).json()
+        res.status(204).json();
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
@@ -68,7 +76,7 @@ export const chatController = {
           .status(200)
           .json({ data: data, message: "All data retrieve successfully" });
       } else {
-        res.status(204).json()
+        res.status(204).json();
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });

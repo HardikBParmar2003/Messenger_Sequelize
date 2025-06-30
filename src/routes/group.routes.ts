@@ -31,4 +31,3 @@ groupRouter.post(
 
   groupRouter.delete("/deleteGroup/:group_id",userMiddleware.isAuthorizedUser,permissionMiddleware.deletePermission,groupController.deleteGroup)
 
-  // groupRouter.get("/group/:group_id",userMiddleware.isAuthorizedUser,permissionMiddleware.deletePermission)

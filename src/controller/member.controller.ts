@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { memberService } from "../services/member.service";
-import { Member } from "../models";
+import { Group, Member, User } from "../models";
+import { userRepository } from "../repositories/user.repositories";
+import { groupRepository } from "../repositories/group.repositories";
 
 export const memberController = {
   async addUser(req: Request, res: Response) {
@@ -32,7 +34,7 @@ export const memberController = {
     try {
       const user_id: number = Number(req.body.member_id);
       const group_id: number = Number(req.body.group_id);
-      const data: number | false  = await memberService.removeUser(
+      const data: number | false = await memberService.removeUser(
         user_id,
         group_id
       );
@@ -53,19 +55,24 @@ export const memberController = {
     try {
       const user_id: number = req.user?.user_id as number;
       const group_id: number = Number(req.params.group_id);
-      const data: number | false  = await memberService.removeUser(
-        user_id,
+      const isGroup: Group | null = await groupRepository.getGroupData(
         group_id
       );
-      if (data != false) {
-        res
-          .status(200)
-          .json({
+      if (isGroup) {
+        const data: number | false = await memberService.removeUser(
+          user_id,
+          group_id
+        );
+        if (data != false) {
+          res.status(200).json({
             data: data,
-            message: "User removed from group successfully",
+            message: "User left  group successfully",
           });
+        } else {
+          res.status(500).json("User is not exists in group");
+        }
       } else {
-        res.status(500).json("User is not exists in group");
+        res.status(400).json({ data: null, message: "Group is not exist" });
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });

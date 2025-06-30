@@ -19,6 +19,9 @@ export class Otp extends Model<Otp> {
   @Column({
     type: DataType.STRING,
     allowNull: false,
+    validate: {
+      isEmail: true, // Must be a valid email
+    },
   })
   email!: string;
 

@@ -3,6 +3,7 @@ import { userController } from "../controller/user.controller";
 import cookieParser from "cookie-parser";
 import { userMiddleware } from "../middleware/user.middleware";
 import { upload } from "../middleware/cloudeinarry.middleware";
+import { validationMiddleware } from "../middleware/validation.middleware";
 
 export const userRrouter = Router();
 userRrouter.use(cookieParser());
@@ -158,7 +159,7 @@ userRrouter.post("/otpVerification", upload.none(), userController.verifyOtp);
  *       500:
  *         description: Server error or login failed
  */
-userRrouter.post("/signUpUser", upload.none(), userController.create); // new user sign up
+userRrouter.post("/signUpUser", upload.none(),validationMiddleware.validateSignup, userController.create); // new user sign up
 
 /**
  * @swagger
@@ -223,7 +224,7 @@ userRrouter.post("/signUpUser", upload.none(), userController.create); // new us
  *       500:
  *         description: Server error or login failed
  */
-userRrouter.post("/loginUser", upload.none(), userController.logIn);
+userRrouter.post("/loginUser", upload.none(),validationMiddleware.validateLogin, userController.logIn);
 
 /**
  * @swagger
@@ -614,6 +615,7 @@ userRrouter.put(
   "/updateUserDetails",
   userMiddleware.isAuthorizedUser,
   upload.single("profile"),
+  validationMiddleware.validateUpdation,
   userController.updateUser
 );
 

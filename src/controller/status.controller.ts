@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 import { statusService } from "../services/status.service";
-import { Status } from "../models";
+import { Status, User } from "../models";
 import { date, Err } from "joi";
 import { statusRepository } from "../repositories/status.repository";
+import { userRepository } from "../repositories/user.repositories";
 
 export const statusController = {
   async uploadStatus(req: Request, res: Response) {
@@ -55,13 +56,18 @@ export const statusController = {
     try {
       const user_id: number =
         Number(req.params.user_id) || (req.user?.user_id as number);
-      const statusData: Status[] = await statusService.getUserStatus(user_id);
-      if (statusData.length > 0) {
-        res
-          .status(200)
-          .json({ data: statusData, message: "Status fetched successfully" });
+      const user: User | null = await userRepository.getIndividualUser(user_id);
+      if (user) {
+        const statusData: Status[] = await statusService.getUserStatus(user_id);
+        if (statusData.length > 0) {
+          res
+            .status(200)
+            .json({ data: statusData, message: "Status fetched successfully" });
+        } else {
+          res.status(204).json();
+        }
       } else {
-        res.status(204).json()
+        res.status(400).json("User does not exist bad request");
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
@@ -80,17 +86,17 @@ export const statusController = {
           message: "all status fetched successfully",
         });
       } else {
-        res.status(204).json()
+        res.status(204).json();
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
     }
   },
 
-  async searchStatus(req:Request,res:Response){
+  async searchStatus(req: Request, res: Response) {
     try {
       const user_id: number = req.user?.user_id as number;
-      const value:string = req.params.value
+      const value: string = req.params.value;
       const userStatusData: Object[] = await statusService.searchStatus(
         user_id,
         value
@@ -101,10 +107,10 @@ export const statusController = {
           message: "User details fetched successfully",
         });
       } else {
-        res.status(204).json()
+        res.status(204).json();
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
     }
-  }
+  },
 };

@@ -28,6 +28,8 @@ const statusStorage = new CloudinaryStorage({
   }),
 });
 
-const upload: multer.Multer = multer({ storage: profileStorage });
+const upload: multer.Multer = multer({
+  storage: profileStorage,
+});
 const uploadDocument: multer.Multer = multer({ storage: statusStorage });
 export { upload, uploadDocument };

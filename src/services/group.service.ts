@@ -42,7 +42,6 @@ export const groupService = {
         return false
       }
     } catch (error) {
-      console.error(error)
       await t.rollback()
       throw new Error("Error while creating group");
     }

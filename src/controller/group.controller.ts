@@ -8,11 +8,26 @@ export const groupController = {
     try {
       const user_id: number = Number(req.user?.user_id);
       const groupName: string = req.body.groupName;
-      const data = await groupService.createGroup(user_id, groupName);
-      res
-        .status(201)
-        .json({ data: data, message: "Group created syuccessfully" });
-    } catch (error:any) {
+      if (groupName) {
+        const isGroup = await groupRepository.groupExist(user_id, groupName);
+        if (isGroup) {
+          const data = await groupService.createGroup(user_id, groupName);
+          res
+            .status(201)
+            .json({ data: data, message: "Group created syuccessfully" });
+        } else {
+          res.status(400).json({
+            data: null,
+            mesage:
+              "Duplicate Group name by same user try with different group name",
+          });
+        }
+      } else {
+        res
+          .status(400)
+          .json({ data: null, mesage: "Grtoup name can't be empty" });
+      }
+    } catch (error: any) {
       res.status(500).json({ data: null, message: error.message });
     }
   },

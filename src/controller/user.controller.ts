@@ -62,9 +62,7 @@ export const userController = {
 
   async logIn(req: Request, res: Response): Promise<void> {
     try {
-      console.error("hello in async log in:",req.body)
       const isUser: string | false = await userService.logIn(req.body);
-      console.error("is user is:",isUser)
       if (isUser) {
         res.cookie("jwt_token", isUser);
         res.status(200).json({ data: isUser, message: "Successfull login" });
@@ -74,7 +72,6 @@ export const userController = {
           .json("You are not log in user or credential does not match");
       }
     } catch (error:any) {
-      console.error(error)
       res.status(500).json({ data: null, message: error.message });
     }
   },

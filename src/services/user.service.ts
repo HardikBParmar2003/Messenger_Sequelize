@@ -1,10 +1,8 @@
 import bcrypt from "bcrypt";
 import { userRepository } from "../repositories/user.repositories";
 import { Otp, User } from "../models";
-import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { date } from "joi";
 import { sendEmail } from "../emailSender/sendEmail";
 import { Request } from "express";
 
@@ -53,6 +51,7 @@ export const userService = {
         last_name: data.last_name,
         email: email,
         password: password,
+        profile_photo:'https://res.cloudinary.com/duy1xfupo/image/upload/v1751265813/hardik/qnibi07eosueazvthvfz.png'
       };
       return userRepository.create(userData as User);
     } catch (error) {
@@ -64,8 +63,9 @@ export const userService = {
     try {
       const userData = await userRepository.logIn(data);
       if (userData) {
-        const password: string = userData?.password as string;
-        const isUser: boolean = await bcrypt.compare(data.password, password);
+        const password:string = userData?.password
+        const userPassword = String(data.password);
+        const isUser: boolean = await bcrypt.compare(userPassword, password);
         if (isUser) {
           const jwtToken: string = jwt.sign(
             {
@@ -85,7 +85,6 @@ export const userService = {
         return false;
       }
     } catch (error) {
-      console.error(error)
       throw new Error("Log in attemt is unsuccessfull");
     }
   },
