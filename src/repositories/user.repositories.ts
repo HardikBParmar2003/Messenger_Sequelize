@@ -28,11 +28,12 @@ export const userRepository = {
 
   async verifyOtp(email: string, otp: string) {
     try {
+      let userOtp:string = otp as string
       const cutoffDate = new Date(Date.now() - 24 * 60 * 60 * 1000);
       const isVerified = await Otp.findOne({
         where: {
           email: email,
-          otp: otp,
+          otp: userOtp,
           expiresAt: {
             [Op.gt]: cutoffDate,
           },
