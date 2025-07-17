@@ -22,9 +22,9 @@ export const chatRepository = {
           ],
         },
 
-        attributes: {
-          exclude: ["id", "updatedAt", "group_id"],
-        },
+      attributes: {
+        exclude: ["id", "updatedAt", "group_id"],
+      },
         order: [["createdAt", "ASC"]],
       });
     } catch (error) {

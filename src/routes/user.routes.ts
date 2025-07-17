@@ -508,6 +508,8 @@ userRrouter.get(
   userController.getUserDetails
 );
 
+userRrouter.get("/allUser",userMiddleware.isAuthorizedUser,userController.getAllUser)
+
 /**
  * @swagger
  * /user/getGroupChatWithUser/{group_id}:
@@ -630,3 +632,5 @@ userRrouter.get(
   userMiddleware.isAuthorizedUser,
   userController.generatePDFGroupChat
 );
+
+// userRrouter.get("/verifyUser",userMiddleware.verifyUser)

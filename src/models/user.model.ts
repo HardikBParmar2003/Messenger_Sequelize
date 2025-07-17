@@ -8,7 +8,6 @@ import {
   CreatedAt,
   UpdatedAt,
   HasMany,
-  ForeignKey,
   BelongsToMany,
 } from "sequelize-typescript";
 import { Group } from "./group.model";

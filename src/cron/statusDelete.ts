@@ -11,5 +11,4 @@ export function statusDelete() {
   }
 }
 
-
 // 0 0 * * *  (minute 0 hour 0 day of month * month * weekday *(start sunday 0)) ---> means every daya at 12:00 AM midnight

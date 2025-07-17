@@ -94,7 +94,7 @@ export const statusRepository = {
 
   async getStatus(status_id: number) {
     try {
-      return await Status.findByPk(status_id, {});
+      return await Status.findByPk(status_id);
     } catch (error) {
       throw new Error("Error while fetching status");
     }

@@ -3,6 +3,7 @@ import { userService } from "../services/user.service";
 import { generatePersonalChatPDF } from "../generatPDF/personalChat.pdf";
 import { generatGroupChatPDF } from "../generatPDF/groupChat.pdf";
 import { Chat, Otp, User } from "../models";
+import { userRepository } from "../repositories/user.repositories";
 
 export const userController = {
   async requestOTp(req: Request, res: Response): Promise<void> {
@@ -52,6 +53,7 @@ export const userController = {
     try {
       const email: string = req.cookies.user_email;
       const userData: User = await userService.create(req.body, email);
+      res.clearCookie("user_email");
       res
         .status(201)
         .json({ data: userData, message: "User created successfully" });
@@ -62,16 +64,25 @@ export const userController = {
 
   async logIn(req: Request, res: Response): Promise<void> {
     try {
-      const isUser: string | false = await userService.logIn(req.body);
+      const isUser: false | { jwtToken: string; userData: User } =
+        await userService.logIn(req.body);
+
       if (isUser) {
-        res.cookie("jwt_token", isUser);
+        res.cookie("jwt_token", isUser.jwtToken, {
+          httpOnly: true, // for security (optional but recommended)
+          secure: false, // true if HTTPS, false for local dev HTTP
+          sameSite: "lax", // or 'none' if HTTPS and secure:true
+        });
         res.status(200).json({ data: isUser, message: "Successfull login" });
       } else {
         res
           .status(500)
-          .json("You are not log in user or credential does not match");
+          .json({
+            data: null,
+            message: "You are not valid user or credential does not match",
+          });
       }
-    } catch (error:any) {
+    } catch (error: any) {
       res.status(500).json({ data: null, message: error.message });
     }
   },
@@ -84,10 +95,19 @@ export const userController = {
           .status(200)
           .json({ data: data, message: "Users find successfully" });
       } else {
-        res.status(204).json()
+        res.status(200).json({ data: [], message: "No data found" });
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
+    }
+  },
+
+  async getAllUser(req: Request, res: Response) {
+    try {
+      const user_id: number = req.user?.user_id as number;
+      const userData = await userService.getAllUser(user_id);
+    } catch (error) {
+      res.status(500).json({ data: null, message: "Something went wrong " });
     }
   },
 
@@ -121,7 +141,7 @@ export const userController = {
           .status(200)
           .json({ data: data, message: "Chat data retrieve successfully" });
       } else {
-        res.status(204).json()
+        res.status(200).json({ data: [], message: "No Content" });
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
@@ -130,14 +150,15 @@ export const userController = {
 
   async updateUser(req: Request, res: Response) {
     try {
-      const userData: [affectedCount: number] = await userService.updateUser(
-        req.body,
-        req.file?.path as string,
-        req.user?.user_id as number
-      );
+      const profile: string =
+        req.file?.path ||
+        "https://res.cloudinary.com/duy1xfupo/image/upload/v1751265813/hardik/qnibi07eosueazvthvfz.png";
+      const user_id: number = req.user?.user_id as number;
+      const userData = await userService.updateUser(req.body, profile, user_id);
       if (userData[0] != 0) {
+        const updatedUserData = await userRepository.getIndividualUser(user_id);
         res.status(200).json({
-          data: userData,
+          data: updatedUserData,
           message: "User details updated successfully",
         });
       } else {
@@ -170,7 +191,7 @@ export const userController = {
             "PDF generate successfully and sent to your registered Email !!!",
         });
       } else {
-        res.status(204).json()
+        res.status(204).json();
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
@@ -190,7 +211,7 @@ export const userController = {
             "PDF generated successfully and sent to your registered Email !!!",
         });
       } else {
-        res.status(204).json()
+        res.status(204).json();
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });

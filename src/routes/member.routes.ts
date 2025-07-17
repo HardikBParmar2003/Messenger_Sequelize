@@ -8,18 +8,23 @@ export const memberRouter = Router();
 memberRouter.use(cookieParser());
 
 memberRouter.post(
-    "/addToGroup",
-    userMiddleware.isAuthorizedUser,
-    permissionMiddleware.addmember,
-    upload.none(),
-    memberController.addUser
-  ); 
-  
-  memberRouter.delete(
-    "/removeUserFromGroup",
-    userMiddleware.isAuthorizedUser,
-    permissionMiddleware.removeMemberPermission,
-    memberController.removeUser
-  ); 
+  "/addToGroup",
+  upload.none(),
+  userMiddleware.isAuthorizedUser,
+  permissionMiddleware.addmember,
+  memberController.addUser
+);
 
-  memberRouter.get("/leftGroup/:group_id",userMiddleware.isAuthorizedUser,memberController.leftGroup)
+memberRouter.delete(
+  "/removeUserFromGroup",
+  upload.none(),
+  userMiddleware.isAuthorizedUser,
+  permissionMiddleware.removeMemberPermission,
+  memberController.removeUser
+);
+
+memberRouter.get(
+  "/leftGroup/:group_id",
+  userMiddleware.isAuthorizedUser,
+  memberController.leftGroup
+);

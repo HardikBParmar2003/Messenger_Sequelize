@@ -1,5 +1,13 @@
 import { Transaction } from "sequelize/types/transaction";
-import { Group, Member, Permission, Role, RolePermission } from "../models";
+import {
+  Group,
+  Member,
+  Permission,
+  Role,
+  RolePermission,
+  User,
+} from "../models";
+import { getgroups } from "process";
 
 export const groupRepository = {
   async createGroup(data: Group, options?: { transaction?: Transaction }) {
@@ -13,7 +21,7 @@ export const groupRepository = {
   async getGroups(user_id: number) {
     try {
       const groups = await Group.findAll({
-        attributes: ["group_id", "group_name"], //this will include this field also
+        attributes: ["group_id", "group_name", "profile_photo", "user_id"], //this will include this field also
         include: [
           {
             model: Member,
@@ -35,7 +43,11 @@ export const groupRepository = {
           group_id,
         },
       });
-      return data2;
+      return await Group.findByPk(group_id, {
+        attributes: {
+          exclude: ["createdAt", "deletedAt", "updatedAt"],
+        },
+      });
     } catch (error) {
       throw new Error("Error while updating group data");
     }
@@ -58,6 +70,7 @@ export const groupRepository = {
       throw new Error("Error while deleting group");
     }
   },
+
   async groupExist(user_id: number, group_name: string) {
     try {
       return await Group.findOne({
@@ -68,6 +81,25 @@ export const groupRepository = {
       });
     } catch (error) {
       throw new Error("Error while checking group");
+    }
+  },
+
+  async getGroupUsers(group_id: number) {
+    try {
+      const groupUsers = await Member.findAll({
+        where: { group_id },
+        attributes: [],
+        include: {
+          model: User,
+          as: "user",
+          attributes: {
+            exclude: ["createdAt,updateAt"],
+          },
+        },
+      });
+      return groupUsers;
+    } catch (error) {
+      throw new Error("Error while get users from group");
     }
   },
 };

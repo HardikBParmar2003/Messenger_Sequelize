@@ -46,7 +46,7 @@ export const permissionMiddleware = {
           .json({ data: null, message: "No group exist bad request" });
       }
     } catch (error) {
-      res.status(500).json("Something Went Wrong");
+      res.status(500).json({data:null, message:"Something Went Wrong"});
     }
   },
 
@@ -93,7 +93,7 @@ export const permissionMiddleware = {
           .json({ data: null, message: "No group exist bad request" });
       }
     } catch (error) {
-      res.status(500).json("Something Went Wrong");
+      res.status(500).json({ data: null, message: "something went wrong" });
     }
   },
 
@@ -159,7 +159,7 @@ export const permissionMiddleware = {
           .json({ data: null, message: "No user exist bad request" });
       }
     } catch (error) {
-      res.status(500).json("Something Went Wrong");
+      res.status(500).json({ data: null, message: "something went wrong" });
     }
   },
 
@@ -213,7 +213,7 @@ export const permissionMiddleware = {
           .json({ data: null, message: "User does not exist bad request" });
       }
     } catch (error) {
-      res.status(500).json("Something Went Wrong");
+      res.status(500).json({ data: null, message: "somethhing went wrong" });
     }
   },
 };

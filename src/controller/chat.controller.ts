@@ -15,9 +15,9 @@ export const chatController = {
         );
         res
           .status(201)
-          .json({ data: chatData, mesage: "chat data added succesfully" });
+          .json({ data: chatData, message: "chat data added succesfully" });
       } else {
-        res.status(400).json({ data: null, mesage: "Message can't be empty" });
+        res.status(400).json({ data: null, message: "Message can't be empty" });
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
@@ -37,9 +37,9 @@ export const chatController = {
         );
         res
           .status(201)
-          .json({ data: chatData, mesage: "chat data added succesfully" });
+          .json({ data: chatData, message: "chat data added succesfully" });
       } else {
-        res.status(400).json({ data: null, mesage: "Message can't be empty" });
+        res.status(400).json({ data: null, message: "Message can't be empty" });
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
@@ -60,7 +60,8 @@ export const chatController = {
           message: "User chat retrieve successfully",
         });
       } else {
-        res.status(204).json();
+        res.status(200).json({data:[],message:"no data found"});
+
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });

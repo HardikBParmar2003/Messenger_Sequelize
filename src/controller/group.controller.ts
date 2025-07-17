@@ -2,6 +2,7 @@ import { groupService } from "../services/group.service";
 import { Request, Response } from "express";
 import { Group } from "../models";
 import { groupRepository } from "../repositories/group.repositories";
+import { date } from "joi";
 
 export const groupController = {
   async createGroup(req: Request, res: Response) {
@@ -10,22 +11,28 @@ export const groupController = {
       const groupName: string = req.body.groupName;
       if (groupName) {
         const isGroup = await groupRepository.groupExist(user_id, groupName);
-        if (isGroup) {
+        if (!isGroup) {
           const data = await groupService.createGroup(user_id, groupName);
-          res
-            .status(201)
-            .json({ data: data, message: "Group created syuccessfully" });
+          if (data) {
+            res
+              .status(201)
+              .json({ data: data, message: "Group created syuccessfully" });
+          } else {
+            res
+              .status(201)
+              .json({ data: null, message: "Something Went wrong" });
+          }
         } else {
           res.status(400).json({
             data: null,
-            mesage:
+            message:
               "Duplicate Group name by same user try with different group name",
           });
         }
       } else {
         res
           .status(400)
-          .json({ data: null, mesage: "Grtoup name can't be empty" });
+          .json({ data: null, message: "Grtoup name can't be empty" });
       }
     } catch (error: any) {
       res.status(500).json({ data: null, message: error.message });
@@ -42,7 +49,10 @@ export const groupController = {
           message: "Group data fetched successfully",
         });
       } else {
-        res.status(204).json();
+        res.status(200).json({
+          data: [],
+          message: "No Group data ",
+        });
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
@@ -56,8 +66,8 @@ export const groupController = {
         req.file?.path as string,
         req.params.group_id
       );
-      if (groupData[0] == 0) {
-        res.status(500).json({ date: null, message: "No data to updated" });
+      if (!groupData) {
+        res.status(500).json({ date: null, message: "Something Went Wrong" });
       } else {
         res.status(200).json({
           data: groupData,
@@ -69,16 +79,40 @@ export const groupController = {
     }
   },
 
+  async getGroupUsers(req: Request, res: Response) {
+    try {
+      const group_id: number = Number(req.params.group_id);
+      const group_data: Group | null = await groupRepository.getGroupData(
+        group_id
+      );
+      if (group_data) {
+        const groupUsers = await groupService.getGroupUsers(group_id)
+        res.status(200).json({data:groupUsers,message:"Users fetched successfully"})
+      } else {
+        res
+          .status(400)
+          .json({ data: null, message: "Group is not exist bad request" });
+      }
+    } catch (error) {
+      res.status(500).json({
+        data: null,
+        message: "Something went wrong",
+      });
+    }
+  },
+
   async deleteGroup(req: Request, res: Response) {
     try {
       const group_id: number = Number(req.params.group_id);
-      const deleteGroup: number | false = await groupService.deleteGroup(
+      const deleteGroup: Group | false = await groupService.deleteGroup(
         group_id
       );
-      if (deleteGroup != false) {
-        res.status(200).json("Group deleted successfully");
+      if (deleteGroup) {
+        res
+          .status(200)
+          .json({ data: deleteGroup, messae: "Group deleted successfully" });
       } else {
-        res.status(400).json("Group not exist");
+        res.status(400).json({ data: null, message: "Group not exist" });
       }
     } catch (error) {
       res.status(500).json({
