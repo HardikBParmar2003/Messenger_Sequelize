@@ -1,5 +1,6 @@
 import { Transaction } from "sequelize/types/transaction";
 import {
+  Chat,
   Group,
   Member,
   Permission,
@@ -8,6 +9,7 @@ import {
   User,
 } from "../models";
 import { getgroups } from "process";
+import { Sequelize } from "sequelize-typescript";
 
 export const groupRepository = {
   async createGroup(data: Group, options?: { transaction?: Transaction }) {
@@ -21,13 +23,30 @@ export const groupRepository = {
   async getGroups(user_id: number) {
     try {
       const groups = await Group.findAll({
-        attributes: ["group_id", "group_name", "profile_photo", "user_id"], //this will include this field also
+        attributes: [
+          "group_id",
+          "group_name",
+          "profile_photo",
+          "user_id",
+          [
+            Sequelize.fn("MAX", Sequelize.col("chat.createdAt")),
+            "latestMessageTime",
+          ],
+        ], //this will include this field also
         include: [
           {
             model: Member,
             where: { user_id },
-            attributes: [], //By using this we will be able to exclude all field of Member module
+            attributes: [],
           },
+          {
+            model: Chat,
+            attributes: [],
+          },
+        ],
+        group: ["Group.group_id"],
+        order: [
+          [Sequelize.fn("MAX", Sequelize.col("chat.createdAt")), "DESC"],
         ],
       });
       return groups;

@@ -19,7 +19,7 @@ export const validationMiddleware = {
         next();
       }
     } catch (error: any) {
-      res.status(500).json({ data: null, message: error.message });
+      res.status(500).json({ data: null, message: error[0].message });
     }
   },
 

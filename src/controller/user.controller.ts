@@ -4,13 +4,16 @@ import { generatePersonalChatPDF } from "../generatPDF/personalChat.pdf";
 import { generatGroupChatPDF } from "../generatPDF/groupChat.pdf";
 import { Chat, Otp, User } from "../models";
 import { userRepository } from "../repositories/user.repositories";
+import { findUserType } from "../../interface";
 
 export const userController = {
   async requestOTp(req: Request, res: Response): Promise<void> {
     try {
       const data: false | Otp = await userService.requestOtp(req.body.email);
       if (data) {
-        res.cookie("user_email", req.body.email);
+        res.cookie("user_email", req.body.email, {
+          maxAge: 5 * 60 * 1000,
+        });
         res.status(200).json({
           data,
           message: `Mail sent to ${req.body.email} successfully `,
@@ -58,7 +61,9 @@ export const userController = {
         .status(201)
         .json({ data: userData, message: "User created successfully" });
     } catch (error) {
-      res.status(500).json({ data: null, message: error });
+      res
+        .status(500)
+        .json({ data: null, message: "Something went wrong try again" });
     }
   },
 
@@ -69,18 +74,17 @@ export const userController = {
 
       if (isUser) {
         res.cookie("jwt_token", isUser.jwtToken, {
-          httpOnly: true, // for security (optional but recommended)
+          maxAge: 60 * 60 * 1000,
+          httpOnly: false, // for security (optional but recommended)
           secure: false, // true if HTTPS, false for local dev HTTP
           sameSite: "lax", // or 'none' if HTTPS and secure:true
         });
         res.status(200).json({ data: isUser, message: "Successfull login" });
       } else {
-        res
-          .status(500)
-          .json({
-            data: null,
-            message: "You are not valid user or credential does not match",
-          });
+        res.status(500).json({
+          data: null,
+          message: "You are not valid user or credential does not match",
+        });
       }
     } catch (error: any) {
       res.status(500).json({ data: null, message: error.message });
@@ -89,11 +93,13 @@ export const userController = {
 
   async findUser(req: Request, res: Response) {
     try {
-      const data: User[] = await userService.findUser(req);
-      if (data.length > 0) {
-        res
-          .status(200)
-          .json({ data: data, message: "Users find successfully" });
+      const data: findUserType = await userService.findUser(req);
+      if (data.rows.length > 0) {
+        res.status(200).json({
+          data: data.rows,
+          totalRows: data.count,
+          message: "Users find successfully",
+        });
       } else {
         res.status(200).json({ data: [], message: "No data found" });
       }
@@ -191,9 +197,12 @@ export const userController = {
             "PDF generate successfully and sent to your registered Email !!!",
         });
       } else {
-        res.status(204).json();
+        res
+          .status(200)
+          .json({ data: null, message: "No chat to generate PDF" });
       }
     } catch (error) {
+      console.log("error is:", error);
       res.status(500).json({ data: null, message: error });
     }
   },
@@ -211,7 +220,9 @@ export const userController = {
             "PDF generated successfully and sent to your registered Email !!!",
         });
       } else {
-        res.status(204).json();
+        res
+          .status(200)
+          .json({ data: null, message: "No chat to generate PDF" });
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });

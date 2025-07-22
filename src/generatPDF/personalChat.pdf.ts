@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 import { chatRepository } from "../repositories/chat.repoitories";
-import PDFDocument, { file } from "pdfkit";
+import PDFDocument from "pdfkit";
 import fs from "fs";
 import { Chat } from "../../interface";
 import { sendEmail } from "../emailSender/sendEmail";
+
 export const generatePersonalChatPDF = {
   async personalChat(req: Request, res: Response) {
     const admin_id: number = req.user?.user_id as number;
@@ -13,58 +14,77 @@ export const generatePersonalChatPDF = {
     const user_id: number = req.body.user_id;
     const user_name: string = req.body.user_name;
     const data: Chat[] = await chatRepository.getUserChat(admin_id, user_id);
+
     if (data.length > 0) {
       let fileName = `${admin_name}_${user_name}_chat.pdf`;
-      let filePath: string = `/home/hardik/Hardik Parmar Trainnig Folder/Sequelize/Messenger postgres/public/assets/${fileName}`;
-      const doc = new PDFDocument();
+      let filePath: string = `public/assets/${fileName}`;
+
+      const doc = new PDFDocument({ margin: 50 });
       doc.pipe(fs.createWriteStream(filePath));
+
       doc
         .fontSize(20)
         .font("Times-Roman")
         .text(`Chat Between ${admin_name} and ${user_name}`, {
           align: "center",
         });
-      let yPos: number = 120;
-      let currentDate: string = "";
-      data.forEach((msg, index) => {
-        doc.fontSize(15);
-        const date: Date = msg.createdAt;
-        const newTime: string = date.getHours() + ":" + date.getMinutes();
 
-        let newDate: string =
-          date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear();
-        let line: string;
+      doc.moveDown(2);
+
+      let currentDate: string = "";
+
+      data.forEach((msg, index) => {
+        const date: Date = msg.createdAt;
+        const newTime: string =
+          date.getHours().toString().padStart(2, "0") +
+          ":" +
+          date.getMinutes().toString().padStart(2, "0");
+
+        const newDate: string =
+          date.getDate() +
+          "-" +
+          (date.getMonth() + 1) +
+          "-" +
+          date.getFullYear();
+
         if (newDate !== currentDate) {
-          line = `${newDate}`;
+          if (currentDate !== "") doc.moveDown(1);
+
           doc
             .font("Times-Bold")
-            .text(line, 50, yPos, { width: 500, align: "center" });
-          yPos += 20;
+            .fontSize(12)
+            .text(newDate, { align: "center" });
+
+          doc.moveDown(0.5);
           currentDate = newDate;
         }
 
         if (msg.sender_id === admin_id) {
           doc
             .font("Times-Roman")
-            .text(msg.message, 70, yPos, { width: 500, align: "right" })
-            .fontSize(10)
-            .font("Times-Roman")
-            .text(newTime, { width: 500, align: "right" });
-          yPos += 35;
+            .fontSize(12)
+            .text(msg.message, { align: "right", width: 450 });
+
+          doc.fontSize(9).text(newTime, { align: "right" });
         } else {
           doc
             .font("Times-Roman")
-            .text(msg.message, 50, yPos, { width: 500, align: "left" })
-            .fontSize(10)
-            .font("Times-Roman")
-            .text(newTime, { width: 500, align: "left" });
-          yPos += 35;
+            .fontSize(12)
+            .text(msg.message, { align: "left", width: 450 });
+
+          doc.fontSize(9).text(newTime, { align: "left" });
         }
-        if (yPos > 750 && index !== data.length - 1) {
+
+        doc.moveDown(1);
+
+        if (
+          doc.y > doc.page.height - doc.page.margins.bottom - 50 &&
+          index !== data.length - 1
+        ) {
           doc.addPage();
-          yPos = 50;
         }
       });
+
       doc.end();
 
       await sendEmail.chatPDFSendEmail(

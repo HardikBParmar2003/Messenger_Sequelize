@@ -71,7 +71,7 @@ export const chatController = {
   async getAllChattingUser(req: Request, res: Response) {
     try {
       const user_id: number = Number(req.user?.user_id);
-      const data: User[] = await chatService.getAllChattingUser(user_id);
+      const data= await chatService.getAllChattingUser(user_id);
       if (data.length > 0) {
         res
           .status(200)

@@ -1,6 +1,7 @@
 import { Chat, Otp, User } from "../models";
 import { Op } from "sequelize";
 import { Request } from "express";
+import { findUserType } from "../../interface";
 
 export const userRepository = {
   async storeOtp(data: Otp) {
@@ -74,7 +75,7 @@ export const userRepository = {
       const pageSize: number = Number(req.query?.pageSize) || 10;
       const sortType: string = (req.query?.sortType as string) || "ASC";
       const sortBy: string = (req.query?.sortBy as string) || "user_id";
-      const userData = await User.findAll({
+      const { rows, count }:findUserType = await User.findAndCountAll({
         attributes: { exclude: ["password", "createdAt", "updatedAt"] },
         limit: pageSize,
         offset: (page - 1) * pageSize,
@@ -87,7 +88,10 @@ export const userRepository = {
           ],
         },
       });
-      return userData;
+      return {
+         rows,
+         count,
+      };
     } catch (error) {
       throw new Error("No any user");
     }
