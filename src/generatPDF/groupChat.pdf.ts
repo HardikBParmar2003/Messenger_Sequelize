@@ -29,64 +29,6 @@ export const generatGroupChatPDF = {
           });
         let yPos: number = 120;
         let currentDate: string = "";
-        // groupChat.forEach((msg, index) => {
-        //   const full_name: string =
-        //     msg.sender.first_name + " " + msg.sender.last_name;
-        //   doc.fontSize(15);
-        //   const date: Date = msg.createdAt;
-        //   const messageDate: string =
-        //     date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear();
-        //   const messageTime: string = date.getHours() + ":" + date.getMinutes();
-
-        //   if (currentDate != messageDate) {
-        //     doc
-        //       .font("Times-Bold")
-        //       .text(messageDate, 50, yPos, { width: 500, align: "center" });
-        //     yPos += 20;
-        //     currentDate = messageDate;
-        //   }
-
-        //   if (msg.sender.user_id == user_id) {
-        //     doc
-        //       .fontSize(10)
-        //       .font("Times-Bold")
-        //       .text(full_name, 50, yPos, {
-        //         width: 500,
-        //         align: "right",
-        //       })
-        //       .fontSize(15)
-        //       .font("Times-Roman")
-        //       .text(msg.message, {
-        //         width: 500,
-        //         align: "right",
-        //       })
-        //       .fontSize(10)
-        //       .font("Times-Roman")
-        //       .text(messageTime, { width: 500, align: "right" });
-        //     yPos += 55;
-        //   } else {
-        //     doc
-        //       .fontSize(10)
-        //       .font("Times-Bold")
-        //       .text(full_name, 50, yPos, {
-        //         width: 500,
-        //         align: "left",
-        //       })
-        //       .fontSize(15)
-        //       .font("Times-Roman")
-        //       .text(msg.message, {
-        //         width: 500,
-        //         align: "left",
-        //       })
-        //       .fontSize(10)
-        //       .text(messageTime, { width: 500, align: "left" });
-        //     yPos += 55;
-        //   }
-        //   if (yPos > 750 && index !== groupChat.length - 1) {
-        //     doc.addPage();
-        //     yPos = 50;
-        //   }
-        // });
         groupChat.forEach((msg, index) => {
           const full_name = msg.sender.first_name + " " + msg.sender.last_name;
           const date = msg.createdAt;
