@@ -61,6 +61,8 @@ export const generatGroupChatPDF = {
 
             doc.fontSize(10).font("Times-Roman");
             doc.text(messageTime, { width: 500, align: "right" });
+            doc.moveDown();
+
           } else {
             doc.fontSize(10).font("Times-Bold");
             doc.text(full_name, { width: 500, align: "left" });
@@ -70,6 +72,8 @@ export const generatGroupChatPDF = {
 
             doc.fontSize(10);
             doc.text(messageTime, { width: 500, align: "left" });
+            doc.moveDown();
+
           }
 
           if (doc.y > 750 && index !== groupChat.length - 1) {

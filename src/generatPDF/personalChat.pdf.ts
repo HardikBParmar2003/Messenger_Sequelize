@@ -60,19 +60,19 @@ export const generatePersonalChatPDF = {
         }
 
         if (msg.sender_id === admin_id) {
-          doc
-            .font("Times-Roman")
-            .fontSize(12)
-            .text(msg.message, { align: "right", width: 450 });
+          doc.fontSize(15).font("Times-Roman");
+          doc.text(msg.message, { width: 500, align: "right" });
 
-          doc.fontSize(9).text(newTime, { align: "right" });
+          doc.fontSize(10).font("Times-Roman");
+          doc.text(newTime, { width: 500, align: "right" });
+          doc.moveDown();
         } else {
-          doc
-            .font("Times-Roman")
-            .fontSize(12)
-            .text(msg.message, { align: "left", width: 450 });
+          doc.fontSize(15).font("Times-Roman");
+          doc.text(msg.message, { width: 500, align: "left" });
 
-          doc.fontSize(9).text(newTime, { align: "left" });
+          doc.fontSize(10);
+          doc.text(newTime, { width: 500, align: "left" });
+          doc.moveDown();
         }
 
         doc.moveDown(1);
