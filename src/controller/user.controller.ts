@@ -202,7 +202,7 @@ export const userController = {
           .json({ data: null, message: "No chat to generate PDF" });
       }
     } catch (error) {
-      console.log("error is:", error);
+      e.log("error is:", error);
       res.status(500).json({ data: null, message: error });
     }
   },
