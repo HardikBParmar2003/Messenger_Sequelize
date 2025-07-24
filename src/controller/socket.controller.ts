@@ -3,10 +3,26 @@ import { Group, User } from "../models";
 import { socketService } from "../services/socket.service";
 export default function socketTest(ioe: any) {
   const socketIdMap = new Map<number, string>();
-  ioe.on("connection", async (socket: any) => {
-    const user: User | undefined = userMiddleware.getUserIdFromSocket(socket);
+  ioe.use((socket: any, next: any) => {
+    try {
+      const user = userMiddleware.getUserIdFromSocket(socket);
 
-    socketIdMap.set(user!.user_id, socket.id);
+      if (!user) {
+        return next(new Error("Authentication error: user not found"));
+      }
+
+      socket.data.user = user; 
+      next();
+    } catch (err) {
+      next(new Error("Authentication error"));
+    }
+  });
+
+  ioe.on("connection", async (socket: any) => {
+    const user: User = socket.data.user;
+
+
+    socketIdMap.set(user.user_id, socket.id);
     socket.on("joinGroups", (groupIds: number[]) => {
       groupIds.forEach((group_id) => {
         socket.join(String(group_id));
@@ -52,9 +68,9 @@ export default function socketTest(ioe: any) {
     );
 
     socket.on("remove member", (member_id: number, group_id: number) => {
-      const socketId = socketIdMap.get(Number(member_id));
-      if (socketId) {
-        ioe.to(socketId).emit("remove member back", group_id);
+      const socketIdF = socketIdMap.get(Number(member_id));
+      if (socketIdF) {
+        ioe.to(socketIdF).emit("remove member back", group_id);
       }
     });
 
@@ -63,9 +79,9 @@ export default function socketTest(ioe: any) {
     });
 
     socket.on("disconnect", () => {
-      const socketDisconnect = socketIdMap.get(user!.user_id);
+      const socketDisconnect = socketIdMap.get(user.user_id);
       if (socketDisconnect) {
-        socketIdMap.delete(user!.user_id);
+        socketIdMap.delete(user.user_id);
       }
     });
   });
