@@ -1,6 +1,16 @@
+import { userMiddleware } from "../middleware/user.middleware";
+import { Group, User } from "../models";
 import { socketService } from "../services/socket.service";
 export default function socketTest(ioe: any) {
-  ioe.on("connection", (socket: any) => {
+  const socketIdMap = new Map<number, string>();
+  ioe.on("connection", async (socket: any) => {
+    const user: User | undefined = userMiddleware.getUserIdFromSocket(socket);
+
+    if (!user) {
+      socket.disconnect();
+      return;
+    }
+    socketIdMap.set(user.user_id, socket.id);
     socket.on("joinGroups", (groupIds: number[]) => {
       groupIds.forEach((group_id) => {
         socket.join(String(group_id));
@@ -34,5 +44,35 @@ export default function socketTest(ioe: any) {
         ioe.to(String(group_id)).emit("send group message back", chatData);
       }
     );
+
+    socket.on(
+      "add member to group",
+      async (member_id: number, group_id: number) => {
+        const socketIdF = socketIdMap.get(Number(member_id));
+        if (socketIdF) {
+          ioe.to(socketIdF).emit("add member to group back", group_id);
+        }
+      }
+    );
+
+    socket.on("remove member", (member_id: number, group_id: number) => {
+      const socketIdF = socketIdMap.get(Number(member_id));
+      if (socketIdF) {
+        console.log("remove " + member_id + " from " + socketIdF);
+        ioe.to(socketIdF).emit("remove member back", group_id);
+      }
+    });
+
+    // socket.on("update group", (group_id: number, group: Group) => {
+    //   console.log("in update grouop");
+    //   ioe.to(String(group_id)).emit("update group back", group);
+    // });
+
+    socket.on("disconnect", () => {
+      const socketDisconnect = socketIdMap.get(user.user_id);
+      if (socketDisconnect) {
+        socketIdMap.delete(user.user_id);
+      }
+    });
   });
 }

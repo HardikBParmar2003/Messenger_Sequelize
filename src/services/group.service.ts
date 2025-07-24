@@ -99,4 +99,13 @@ export const groupService = {
       throw new Error("Error while deleting group");
     }
   },
+
+  async getGroupData(group_id:number){
+    try {
+      return groupRepository.getGroupData(group_id)
+    } catch (error) {
+      throw new Error("Error while get group data");
+      
+    }
+  }
 };

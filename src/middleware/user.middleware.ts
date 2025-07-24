@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import dotenv from "dotenv";
-
+import * as cookie from "cookie";
+import { User } from "../models";
 dotenv.config();
 
 interface JWTPayload {
@@ -71,4 +72,19 @@ export const userMiddleware = {
   //     throw error;
   //   }
   // },
+
+  getUserIdFromSocket(socket: any) {
+    const cookies = cookie.parse(socket.handshake.headers.cookie || "");
+    const token = cookies.jwt_token;
+    if (token) {
+      try {
+        const user:User = jwt.verify(token, process.env.SECRET_KEY as string) as User;
+        return user;
+      } catch (error) {
+        throw error;
+      }
+    } else {
+      return;
+    }
+  },
 };

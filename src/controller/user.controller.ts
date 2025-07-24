@@ -67,7 +67,7 @@ export const userController = {
     }
   },
 
-  async logIn(req: Request, res: Response): Promise<void> {
+ async logIn(req: Request, res: Response): Promise<void> {
     try {
       const isUser: false | { jwtToken: string; userData: User } =
         await userService.logIn(req.body);
@@ -89,7 +89,7 @@ export const userController = {
     } catch (error: any) {
       res.status(500).json({ data: null, message: error.message });
     }
-  },
+  }, 
 
   async findUser(req: Request, res: Response) {
     try {

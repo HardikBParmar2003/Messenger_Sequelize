@@ -95,8 +95,9 @@ export const groupRepository = {
       return await Group.findOne({
         where: {
           user_id,
-          group_name,
+          group_name,        
         },
+        paranoid:true
       });
     } catch (error) {
       throw new Error("Error while checking group");

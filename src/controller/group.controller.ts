@@ -2,7 +2,6 @@ import { groupService } from "../services/group.service";
 import { Request, Response } from "express";
 import { Group } from "../models";
 import { groupRepository } from "../repositories/group.repositories";
-import { date } from "joi";
 
 export const groupController = {
   async createGroup(req: Request, res: Response) {
@@ -86,8 +85,10 @@ export const groupController = {
         group_id
       );
       if (group_data) {
-        const groupUsers = await groupService.getGroupUsers(group_id)
-        res.status(200).json({data:groupUsers,message:"Users fetched successfully"})
+        const groupUsers = await groupService.getGroupUsers(group_id);
+        res
+          .status(200)
+          .json({ data: groupUsers, message: "Users fetched successfully" });
       } else {
         res
           .status(400)
@@ -113,6 +114,25 @@ export const groupController = {
           .json({ data: deleteGroup, messae: "Group deleted successfully" });
       } else {
         res.status(400).json({ data: null, message: "Group not exist" });
+      }
+    } catch (error) {
+      res.status(500).json({
+        data: null,
+        message: "Error occured while try to delete group",
+      });
+    }
+  },
+
+  async getGroupData(req: Request, res: Response) {
+    try {
+      const group_id: number = Number(req.params.group_id);
+      const group: Group | null = await groupService.getGroupData(group_id);
+      if (group) {
+        res
+          .status(200)
+          .json({ data: group, message: "Group data etched successfully"});
+      }else{
+        res.status(200).json({data:null,message:"No group found"})
       }
     } catch (error) {
       res.status(500).json({
