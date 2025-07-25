@@ -21,7 +21,6 @@ export default function socketTest(ioe: any) {
   ioe.on("connection", async (socket: any) => {
     const user: User = socket.data.user;
 
-
     socketIdMap.set(user.user_id, socket.id);
     socket.on("joinGroups", (groupIds: number[]) => {
       groupIds.forEach((group_id) => {
