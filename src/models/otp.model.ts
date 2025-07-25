@@ -20,7 +20,7 @@ export class Otp extends Model<Otp> {
     type: DataType.STRING,
     allowNull: false,
     validate: {
-      isEmail: true, // Must be a valid email
+      isEmail: true, // must be a valid email
     },
   })
   email!: string;

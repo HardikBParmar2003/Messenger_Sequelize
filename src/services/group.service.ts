@@ -4,6 +4,7 @@ import { groupRepository } from "../repositories/group.repositories";
 import { memberRepository } from "../repositories/member.repositories";
 import { sequelize } from "../config/database";
 import e from "express";
+import { profile } from "console";
 
 interface updateGroup {
   group_name: string;
@@ -16,9 +17,10 @@ export const groupService = {
       const data = {
         user_id: user_id,
         group_name: name,
+        profile_photo : "https://res.cloudinary.com/duy1xfupo/image/upload/v1753350752/hardik/iot39ag5m2akuqqa3ivd.png"
       };
       const groupData: Group = await groupRepository.createGroup(
-        { user_id, group_name: name } as Group,
+        data as Group,
         { transaction: t }
       );
       if (groupData) {
@@ -84,6 +86,7 @@ export const groupService = {
       throw new Error("Error while get user group");
     }
   },
+
   async deleteGroup(group_id: number) {
     try {
       const group_data: Group | null = await groupRepository.getGroupData(

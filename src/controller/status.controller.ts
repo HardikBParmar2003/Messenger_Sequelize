@@ -67,7 +67,7 @@ export const statusController = {
           res.status(204).json();
         }
       } else {
-        res.status(400).json("User does not exist bad request");
+        res.status(400).json({data:null,message:"User does not exist bad request"});
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });

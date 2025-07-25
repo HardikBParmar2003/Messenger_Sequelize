@@ -5,6 +5,7 @@ import { generatGroupChatPDF } from "../generatPDF/groupChat.pdf";
 import { Chat, Otp, User } from "../models";
 import { userRepository } from "../repositories/user.repositories";
 import { findUserType } from "../../interface";
+import { groupService } from "../services/group.service";
 
 export const userController = {
   async requestOTp(req: Request, res: Response): Promise<void> {
@@ -130,7 +131,7 @@ export const userController = {
           message: "User details fetched successfully",
         });
       } else {
-        res.status(404).json({ date: null, message: "User not found" });
+        res.status(400).json({ data: null, message: "User not found" });
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
@@ -139,15 +140,22 @@ export const userController = {
 
   async getUserWithChat(req: Request, res: Response) {
     try {
-      const data: Chat[] = await userService.getUserWithChat(
-        req.params.group_id
+      const isExist = await groupService.getGroupData(
+        Number(req.params.group_id)
       );
-      if (data.length > 0) {
-        res
-          .status(200)
-          .json({ data: data, message: "Chat data retrieve successfully" });
+      if (isExist) {
+        const data: Chat[] = await userService.getUserWithChat(
+          req.params.group_id
+        );
+        if (data.length > 0) {
+          res
+            .status(200)
+            .json({ data: data, message: "Chat data retrieve successfully" });
+        } else {
+          res.status(200).json({ data: [], message: "No Content" });
+        }
       } else {
-        res.status(200).json({ data: [], message: "No Content" });
+        res.status(200).json({ data: [], message: "No Group Found" });
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
@@ -188,18 +196,25 @@ export const userController = {
 
   async generatePDFPersonalChat(req: Request, res: Response) {
     try {
-      const personalChatPDF: boolean =
-        await generatePersonalChatPDF.personalChat(req, res);
-      if (personalChatPDF) {
-        res.status(200).json({
-          data: null,
-          message:
-            "PDF generate successfully and sent to your registered Email !!!",
-        });
+      const user = await userService.getIndividualUser(
+        Number(req.body.user_id)
+      );
+      if (user) {
+        const personalChatPDF: boolean =
+          await generatePersonalChatPDF.personalChat(req, res);
+        if (personalChatPDF) {
+          res.status(200).json({
+            data: null,
+            message:
+              "PDF generate successfully and sent to your registered Email !!!",
+          });
+        } else {
+          res
+            .status(200)
+            .json({ data: null, message: "No chat to generate PDF" });
+        }
       } else {
-        res
-          .status(200)
-          .json({ data: null, message: "No chat to generate PDF" });
+        res.status(400).json({ data: null, message: "User not found" });
       }
     } catch (error) {
       console.log("error is:", error);
@@ -209,20 +224,27 @@ export const userController = {
 
   async generatePDFGroupChat(req: Request, res: Response) {
     try {
-      const groupChatPDF: boolean = await generatGroupChatPDF.groupChatPDF(
-        req,
-        res
+      const isExist = await groupService.getGroupData(
+        Number(req.params.group_id)
       );
-      if (groupChatPDF) {
-        res.status(200).json({
-          data: null,
-          message:
-            "PDF generated successfully and sent to your registered Email !!!",
-        });
+      if (isExist) {
+        const groupChatPDF: boolean = await generatGroupChatPDF.groupChatPDF(
+          req,
+          res
+        );
+        if (groupChatPDF) {
+          res.status(200).json({
+            data: null,
+            message:
+              "PDF generated successfully and sent to your registered Email !!!",
+          });
+        } else {
+          res
+            .status(200)
+            .json({ data: null, message: "No chat to generate PDF" });
+        }
       } else {
-        res
-          .status(200)
-          .json({ data: null, message: "No chat to generate PDF" });
+        res.status(400).json({ data: null, message: "No group exist" });
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });

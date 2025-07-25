@@ -25,7 +25,7 @@ export const memberService = {
     try {
       const userData : Member | null = await memberRepository.getUser(user_id, group_id);
       if (userData) {
-        const admin_id: number = userData?.admin_id as number;
+        const admin_id = userData?.admin_id as number;
         if (user_id == admin_id) {
           const memberData: Member[] = await memberRepository.findAllUser(
             group_id
@@ -46,7 +46,7 @@ export const memberService = {
             );
             return await memberRepository.removeUser(user_id, group_id);
           } else {
-            const data:number = await memberRepository.removeUser(user_id, group_id);
+            const data = await memberRepository.removeUser(user_id, group_id);
             await groupRepository.deleteGroup(group_id);
             return data;
           }
