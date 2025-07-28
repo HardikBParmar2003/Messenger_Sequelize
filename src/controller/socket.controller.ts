@@ -30,7 +30,7 @@ export default function socketTest(ioe: any) {
 
     socket.on(
       "send message",
-      async (sender_id: number, receiver_id: number, message: string) => {
+      async (sender_id: number, receiver_id: number, message: string,sender:string) => {
         const group_id = 0;
         const chatData = await socketService.addMessage(
           sender_id,
@@ -38,13 +38,13 @@ export default function socketTest(ioe: any) {
           message,
           group_id
         );
-        ioe.emit("send message back", chatData);
+        ioe.emit("send message back", chatData,sender);
       }
     );
 
     socket.on(
       "send group message",
-      async (sender_id: number, group_id: number, message: string) => {
+      async (sender_id: number, group_id: number, message: string,sender_name:string,group_name:string) => {
         const receiver_id = 0;
         const chatData = await socketService.addMessage(
           sender_id,
@@ -52,24 +52,24 @@ export default function socketTest(ioe: any) {
           message,
           group_id
         );
-        ioe.to(String(group_id)).emit("send group message back", chatData);
+        ioe.to(String(group_id)).emit("send group message back", chatData,sender_name,group_name);
       }
     );
 
     socket.on(
       "add member to group",
-      async (member_id: number, group_id: number) => {
+      async (member_id: number, group_id: number,admin_name:string) => {
         const socketIdF = socketIdMap.get(Number(member_id));
         if (socketIdF) {
-          ioe.to(socketIdF).emit("add member to group back", group_id);
+          ioe.to(socketIdF).emit("add member to group back", group_id,admin_name);
         }
       }
     );
 
-    socket.on("remove member", (member_id: number, group_id: number) => {
+    socket.on("remove member", (member_id: number, group_id: number,group_name:string) => {
       const socketIdF = socketIdMap.get(Number(member_id));
       if (socketIdF) {
-        ioe.to(socketIdF).emit("remove member back", group_id);
+        ioe.to(socketIdF).emit("remove member back", group_id,member_id,group_name);
       }
     });
 
