@@ -22,6 +22,7 @@ export default function socketTest(ioe: any) {
     const user: User = socket.data.user;
 
     socketIdMap.set(user.user_id, socket.id);
+
     socket.on("joinGroups", (groupIds: number[]) => {
       groupIds.forEach((group_id) => {
         socket.join(String(group_id));
@@ -38,7 +39,15 @@ export default function socketTest(ioe: any) {
           message,
           group_id
         );
-        ioe.emit("send message back", chatData,sender);
+        const receiver_socketId = socketIdMap.get(Number(receiver_id));
+        const sender_socketId = socketIdMap.get(Number(sender_id));
+        if(sender_socketId){
+          ioe.to(sender_socketId).emit("send message back", chatData,sender);
+        }
+        if(receiver_socketId && receiver_socketId != sender_socketId){
+          ioe.to(receiver_socketId).emit("send message back", chatData,sender);
+
+        }
       }
     );
 
@@ -52,7 +61,7 @@ export default function socketTest(ioe: any) {
           message,
           group_id
         );
-        ioe.to(String(group_id)).emit("send group message back", chatData,sender_name,group_name);
+        ioe.to(String(group_id)).emit("send group message back", chatData,group_name);
       }
     );
 
@@ -61,8 +70,8 @@ export default function socketTest(ioe: any) {
       async (member_id: number, group_id: number,admin_name:string) => {
         const socketIdF = socketIdMap.get(Number(member_id));
         if (socketIdF) {
-          ioe.to(socketIdF).emit("add member to group back", group_id,admin_name);
-        }
+          ioe.to(socketIdF).emit("add member to group back", group_id,admin_name,member_id);
+        }  
       }
     );
 

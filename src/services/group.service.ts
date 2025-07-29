@@ -1,10 +1,7 @@
-import { date } from "joi";
 import { Group, Member } from "../models";
 import { groupRepository } from "../repositories/group.repositories";
 import { memberRepository } from "../repositories/member.repositories";
 import { sequelize } from "../config/database";
-import e from "express";
-import { profile } from "console";
 
 interface updateGroup {
   group_name: string;

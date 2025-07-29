@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { chatService } from "../services/chat.service";
-import { Chat, User } from "../models";
+import { Chat } from "../models";
 import { userService } from "../services/user.service";
 import { groupService } from "../services/group.service";
 export const chatController = {
