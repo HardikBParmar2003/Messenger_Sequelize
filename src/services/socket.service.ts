@@ -9,18 +9,20 @@ export const socketService = {
     group_id: number
   ) {
     try {
-      if (!group_id) {
-        const data = {
-          sender_id,
-          receiver_id,
-          message,
-        };
-        return await socketRepository.addMessage(data as Chat);
-      } else {
+      if (!receiver_id) {
         const data = {
           sender_id,
           group_id,
           message,
+        };
+
+        return await socketRepository.addMessage(data as Chat);
+      } else {
+        const data = {
+          sender_id,
+          receiver_id,
+          message,
+          group_id
         };
         return await socketRepository.addMessage(data as Chat);
       }

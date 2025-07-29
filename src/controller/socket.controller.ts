@@ -53,8 +53,8 @@ export default function socketTest(ioe: any) {
 
     socket.on(
       "send group message",
-      async (sender_id: number, group_id: number, message: string,sender_name:string,group_name:string) => {
-        const receiver_id = 0;
+      async (sender_id: number, group_id: number, message: string,group_name:string,receiver?:number) => {
+        const receiver_id = receiver || 0;
         const chatData = await socketService.addMessage(
           sender_id,
           receiver_id,
@@ -71,7 +71,8 @@ export default function socketTest(ioe: any) {
         const socketIdF = socketIdMap.get(Number(member_id));
         if (socketIdF) {
           ioe.to(socketIdF).emit("add member to group back", group_id,admin_name,member_id);
-        }  
+        }
+        
       }
     );
 

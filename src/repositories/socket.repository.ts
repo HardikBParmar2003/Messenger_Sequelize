@@ -9,7 +9,7 @@ export const socketRepository = {
         const messageId = msgData.id;
         const userData = await Chat.findOne({
           where: { id: messageId },
-          attributes: ["message", "createdAt", "group_id"],
+          attributes: ["message", "createdAt", "group_id","receiver_id"],
 
           include: [
             {
