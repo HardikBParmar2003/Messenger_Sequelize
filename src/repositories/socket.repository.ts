@@ -1,3 +1,4 @@
+import { chatController } from "../controller/chat.controller";
 import { Chat, User } from "../models";
 
 export const socketRepository = {

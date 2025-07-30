@@ -32,7 +32,7 @@ export default function socketTest(ioe: any) {
     socket.on(
       "send message",
       async (sender_id: number, receiver_id: number, message: string,sender:string) => {
-        const group_id = 0;
+        const group_id = null;
         const chatData = await socketService.addMessage(
           sender_id,
           receiver_id,

@@ -6,7 +6,7 @@ export const socketService = {
     sender_id: number,
     receiver_id: number,
     message: string,
-    group_id: number
+    group_id: number | null
   ) {
     try {
       if (!receiver_id) {

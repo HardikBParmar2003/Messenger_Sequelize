@@ -18,6 +18,8 @@ export const chatRepository = {
     try {
       return await Chat.findAll({
         where: {
+          group_id:null as any
+          ,
           [Op.or]: [
             { [Op.and]: [{ sender_id: admin_id }, { receiver_id: user_id }] },
             { [Op.and]: [{ sender_id: user_id }, { receiver_id: admin_id }] },
