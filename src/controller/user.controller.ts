@@ -6,6 +6,8 @@ import { Chat, Otp, User } from "../models";
 import { userRepository } from "../repositories/user.repositories";
 import { findUserType } from "../../interface";
 import { groupService } from "../services/group.service";
+import { use } from "react";
+import { dash } from "pdfkit";
 
 export const userController = {
   async requestOTp(req: Request, res: Response): Promise<void> {
@@ -77,8 +79,7 @@ export const userController = {
         res.cookie("jwt_token", isUser.jwtToken, {
           maxAge: 60 * 60 * 1000, // 1 hour
           httpOnly: true, // Can't be accessed from JavaScript (for security)
-          secure: true, // Only over HTTPS
-          sameSite: "none", // For cross-origin requests (CORS)
+          sameSite: "strict", // For cross-origin requests (CORS)
         });
         res.status(200).json({ data: isUser, message: "Successfull login" });
       } else {
@@ -244,6 +245,30 @@ export const userController = {
         }
       } else {
         res.status(400).json({ data: null, message: "No group exist" });
+      }
+    } catch (error) {
+      res.status(500).json({ data: null, message: error });
+    }
+  },
+  async getToken(req: Request, res: Response) {
+    try {
+      const user = req.user;
+      if (user) {
+        res.status(200).json({ data: true, message: "verified user" });
+      } else {
+        res.status(401).json({ data: false, message: "unverified user" });
+      }
+    } catch (error) {
+      res.status(500).json({ data: null, message: error });
+    }
+  },
+  async getEmail(req: Request, res: Response) {
+    try {
+      const email = req.cookies.email;
+      if (email) {
+        res.status(200).json({ data: true, message: "user has email" });
+      } else {
+        res.status(401).json({ data: false, message: "user has not email" });
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });

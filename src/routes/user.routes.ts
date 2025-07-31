@@ -159,7 +159,12 @@ userRrouter.post("/otpVerification", upload.none(), userController.verifyOtp);
  *       500:
  *         description: Server error or login failed
  */
-userRrouter.post("/signUpUser", upload.none(),validationMiddleware.validateSignup, userController.create); // new user sign up
+userRrouter.post(
+  "/signUpUser",
+  upload.none(),
+  validationMiddleware.validateSignup,
+  userController.create
+); // new user sign up
 
 /**
  * @swagger
@@ -224,7 +229,12 @@ userRrouter.post("/signUpUser", upload.none(),validationMiddleware.validateSignu
  *       500:
  *         description: Server error or login failed
  */
-userRrouter.post("/loginUser", upload.none(),validationMiddleware.validateLogin, userController.logIn);
+userRrouter.post(
+  "/loginUser",
+  upload.none(),
+  validationMiddleware.validateLogin,
+  userController.logIn
+);
 
 /**
  * @swagger
@@ -508,7 +518,11 @@ userRrouter.get(
   userController.getUserDetails
 );
 
-userRrouter.get("/allUser",userMiddleware.isAuthorizedUser,userController.getAllUser)
+userRrouter.get(
+  "/allUser",
+  userMiddleware.isAuthorizedUser,
+  userController.getAllUser
+);
 
 /**
  * @swagger
@@ -604,14 +618,14 @@ userRrouter.get(
  *                 description: Profile image file upload
  *     responses:
  *       200:
- *         description: User details updated successfully or no changes 
+ *         description: User details updated successfully or no changes
  *         content:
  *           application/json:
  *             schema:
  *               type: string
  *               example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
  *       500:
- *         description: Internal Server error 
+ *         description: Internal Server error
  */
 userRrouter.put(
   "/updateUserDetails",
@@ -633,4 +647,10 @@ userRrouter.get(
   userController.generatePDFGroupChat
 );
 
-// userRrouter.get("/verifyUser",userMiddleware.verifyUser)
+userRrouter.get(
+  "/getToken",
+  userMiddleware.isAuthorizedUser,
+  userController.getToken
+);
+
+userRrouter.get("/getEmail",userController.getEmail)

@@ -44,7 +44,6 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 const PORT = process.env.PORT || 10000;
 
-console.log("POrt is:",PORT,process.env.FRONTEND_URL);
 statusDelete();
 expiredOtpDelete();
 
