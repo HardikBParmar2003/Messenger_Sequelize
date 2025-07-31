@@ -75,9 +75,10 @@ export const userController = {
 
       if (isUser) {
         res.cookie("jwt_token", isUser.jwtToken, {
-          maxAge: 60 * 60 * 1000,
-          httpOnly: true, // for security (optional but recommended)
-          sameSite: "strict", // or 'none' if HTTPS and secure:true
+          maxAge: 60 * 60 * 1000, // 1 hour
+          httpOnly: true, // Can't be accessed from JavaScript (for security)
+          secure: true, // Only over HTTPS
+          sameSite: "none", // For cross-origin requests (CORS)
         });
         res.status(200).json({ data: isUser, message: "Successfull login" });
       } else {
