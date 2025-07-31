@@ -13,8 +13,7 @@ import { Server } from "socket.io";
 import http from "http";
 import cors from "cors";
 import socketTest from "./controller/socket.controller";
-console.log("Front end :", process.env.FRONTEND_URL);
-console.log("port:", process.env.PORT);
+
 
 const app = express();
 app.use(
