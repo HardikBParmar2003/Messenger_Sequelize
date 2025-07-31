@@ -78,7 +78,7 @@ export const userController = {
           maxAge: 60 * 60 * 1000,
           httpOnly: false, // for security (optional but recommended)
           secure: false, // true if HTTPS, false for local dev HTTP
-          sameSite: "lax", // or 'none' if HTTPS and secure:true
+          sameSite: "none", // or 'none' if HTTPS and secure:true
         });
         res.status(200).json({ data: isUser, message: "Successfull login" });
       } else {
