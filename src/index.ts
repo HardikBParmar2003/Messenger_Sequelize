@@ -14,32 +14,31 @@ import http from "http";
 import cors from "cors";
 import socketTest from "./controller/socket.controller";
 
-
 const app = express();
-// app.use(
-//   cors({
-//     origin: process.env.FRONTEND_URL,
-//     credentials: true,
-//   })
-// );
-
-
 app.use(
   cors({
-    origin: "*",
-  methods: 'GET,POST,PUT,DELETE,OPTIONS',
-  allowedHeaders: [
-    'Content-Type',
-    'Authorization',
-    'x-user-id',
-    'Accept',
-    'Origin',
-    'X-Requested-With',
-    'Access-Control-Allow-Origin'
-  ],
-  credentials: true,
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
   })
 );
+
+
+// app.use(
+//   cors({
+//     origin: "*",
+//   methods: 'GET,POST,PUT,DELETE,OPTIONS',
+//   allowedHeaders: [
+//     'Content-Type',
+//     'Authorization',
+//     'x-user-id',
+//     'Accept',
+//     'Origin',
+//     'X-Requested-With',
+//     'Access-Control-Allow-Origin'
+//   ],
+//   credentials: true,
+//   })
+// );
 
 
 app.use(express.json());
@@ -60,7 +59,9 @@ app.use("/status", statusRouter);
 app.use("/call", callRouter);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-const PORT = process.env.PORT || 10000;
+const PORT = process.env.PORT || 4000;
+console.log("port is:",PORT,process.env.FRONTEND_URL);
+
 statusDelete();
 expiredOtpDelete();
 
