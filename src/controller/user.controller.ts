@@ -76,7 +76,7 @@ export const userController = {
       if (isUser) {
         res.cookie("jwt_token", isUser.jwtToken, {
           maxAge: 60 * 60 * 1000,
-          httpOnly: true, // for security (optional but recommended)
+          httpOnly: false, // for security (optional but recommended)
           secure: true, // true if HTTPS, false for local dev HTTP
           sameSite: "none", // or 'none' if HTTPS and secure:true
         });
