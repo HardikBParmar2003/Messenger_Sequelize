@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { memberService } from "../services/member.service";
 import { Group, Member, User } from "../models";
-import { userRepository } from "../repositories/user.repositories";
 import { groupRepository } from "../repositories/group.repositories";
 
 export const memberController = {
@@ -23,10 +22,10 @@ export const memberController = {
       } else {
         res
           .status(400)
-          .json({ data: null, mesage: "User already present in group" });
+          .json({ data: null, message: "User already present in group" });
       }
     } catch (error) {
-      res.status(500).json({ data: null, message: error });
+      res.status(500).json({ data: null, message: "something went wrong" });
     }
   },
 
@@ -44,7 +43,8 @@ export const memberController = {
           message: "User removed from group successfully",
         });
       } else {
-        res.status(400).json("User is not exists in group");
+        res.status(400).json({data: null,
+          message:"User is not exists in group"});
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
@@ -69,7 +69,9 @@ export const memberController = {
             message: "User left  group successfully",
           });
         } else {
-          res.status(500).json("User is not exists in group");
+          res.status(500).json({
+            data: null,
+            message:"User is not exists in group"});
         }
       } else {
         res.status(400).json({ data: null, message: "Group is not exist" });

@@ -1,6 +1,4 @@
-require('dotenv').config(); // make sure to load .env
-// import dotenv from "dotenv";
-// dotenv.config();
+require("dotenv").config(); // make sure to load .env
 
 module.exports = {
   development: {
@@ -18,8 +16,8 @@ module.exports = {
     dialect: "mysql",
   },
   production: {
-    use_env_variable: 'DATABASE_URL',
-    dialect: 'postgres',
+    use_env_variable: "DATABASE_URL",
+    dialect: "postgres",
     dialectOptions: {
       ssl: {
         require: true,

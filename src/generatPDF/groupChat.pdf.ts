@@ -17,7 +17,7 @@ export const generatGroupChatPDF = {
       const groupChat = await userRepository.getUserWithChat(group_id);
       if (groupChat.length > 0) {
         let fileName: string = `${group_name}_group_chat.pdf`;
-        let filePath: string = `/home/hardik/Hardik Parmar Trainnig Folder/Sequelize/Messenger postgres/public/assets/${fileName}`;
+        let filePath: string = `public/assets/${fileName}`;
         const doc = new PDFDocument();
         doc.pipe(fs.createWriteStream(filePath));
         doc
@@ -30,63 +30,57 @@ export const generatGroupChatPDF = {
         let yPos: number = 120;
         let currentDate: string = "";
         groupChat.forEach((msg, index) => {
-          const full_name: string =
-            msg.sender.first_name + " " + msg.sender.last_name;
-          doc.fontSize(15);
-          const date: Date = msg.createdAt;
-          const messageDate: string =
-            date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear();
-          const messageTime: string = date.getHours() + ":" + date.getMinutes();
+          const full_name = msg.sender.first_name + " " + msg.sender.last_name;
+          const date = msg.createdAt;
+          const messageDate =
+            date.getDate() +
+            "-" +
+            (date.getMonth() + 1) +
+            "-" +
+            date.getFullYear();
+          const messageTime =
+            date.getHours() +
+            ":" +
+            date.getMinutes().toString().padStart(2, "0");
 
-          if (currentDate != messageDate) {
+          if (currentDate !== messageDate) {
             doc
               .font("Times-Bold")
-              .text(messageDate, 50, yPos, { width: 500, align: "center" });
-            yPos += 20;
+              .fontSize(12)
+              .text(messageDate, { width: 500, align: "center" });
+            doc.moveDown();
             currentDate = messageDate;
           }
 
-          if (msg.sender.user_id == user_id) {
-            doc
-              .fontSize(10)
-              .font("Times-Bold")
-              .text(full_name, 50, yPos, {
-                width: 500,
-                align: "right",
-              })
-              .fontSize(15)
-              .font("Times-Roman")
-              .text(msg.message, {
-                width: 500,
-                align: "right",
-              })
-              .fontSize(10)
-              .font("Times-Roman")
-              .text(messageTime, { width: 500, align: "right" });
-            yPos += 55;
+          if (msg.sender.user_id === user_id) {
+            doc.fontSize(10).font("Times-Bold");
+            doc.text(full_name, { width: 500, align: "right" });
+
+            doc.fontSize(15).font("Times-Roman");
+            doc.text(msg.message, { width: 500, align: "right" });
+
+            doc.fontSize(10).font("Times-Roman");
+            doc.text(messageTime, { width: 500, align: "right" });
+            doc.moveDown();
+
           } else {
-            doc
-              .fontSize(10)
-              .font("Times-Bold")
-              .text(full_name, 50, yPos, {
-                width: 500,
-                align: "left",
-              })
-              .fontSize(15)
-              .font("Times-Roman")
-              .text(msg.message, {
-                width: 500,
-                align: "left",
-              })
-              .fontSize(10)
-              .text(messageTime, { width: 500, align: "left" });
-            yPos += 55;
+            doc.fontSize(10).font("Times-Bold");
+            doc.text(full_name, { width: 500, align: "left" });
+
+            doc.fontSize(15).font("Times-Roman");
+            doc.text(msg.message, { width: 500, align: "left" });
+
+            doc.fontSize(10);
+            doc.text(messageTime, { width: 500, align: "left" });
+            doc.moveDown();
+
           }
-          if (yPos > 750 && index !== groupChat.length - 1) {
+
+          if (doc.y > 750 && index !== groupChat.length - 1) {
             doc.addPage();
-            yPos = 50;
           }
         });
+
         doc.end();
         await sendEmail.chatPDFSendEmail(
           req.user?.email as string,

@@ -1,6 +1,7 @@
 import { Chat, Otp, User } from "../models";
 import { Op } from "sequelize";
 import { Request } from "express";
+import { findUserType } from "../../interface";
 
 export const userRepository = {
   async storeOtp(data: Otp) {
@@ -28,7 +29,7 @@ export const userRepository = {
 
   async verifyOtp(email: string, otp: string) {
     try {
-      let userOtp:string = String(otp)
+      let userOtp: string = String(otp);
       const cutoffDate = new Date(Date.now() - 24 * 60 * 60 * 1000);
       const isVerified = await Otp.findOne({
         where: {
@@ -71,10 +72,10 @@ export const userRepository = {
     try {
       const value: string = req.query.value as string;
       const page: number = Number(req.query?.page) || 1;
-      const pageSize: number = Number(req.query?.pageSize) || 5;
+      const pageSize: number = Number(req.query?.pageSize) || 10;
       const sortType: string = (req.query?.sortType as string) || "ASC";
       const sortBy: string = (req.query?.sortBy as string) || "user_id";
-      const userData = await User.findAll({
+      const { rows, count }:findUserType = await User.findAndCountAll({
         attributes: { exclude: ["password", "createdAt", "updatedAt"] },
         limit: pageSize,
         offset: (page - 1) * pageSize,
@@ -87,15 +88,39 @@ export const userRepository = {
           ],
         },
       });
-      return userData;
+      return {
+         rows,
+         count,
+      };
     } catch (error) {
       throw new Error("No any user");
     }
   },
 
+  async getAllUser(user_id: number) {
+    try {
+      return await Chat.findAll({
+        where: {
+          [Op.or]: [{ sender_id: user_id }, { receiver_id: user_id }],
+        },
+        include: [
+          {
+            model: User,
+          },
+        ],
+      });
+    } catch (error) {
+      throw new Error("Error Occured while fetching users");
+    }
+  },
+
   async getIndividualUser(user_id: number) {
     try {
-      return await User.findByPk(user_id);
+      return await User.findByPk(user_id, {
+        attributes: {
+          exclude: ["createdAt,updatedAt,password"],
+        },
+      });
     } catch (error) {
       throw new Error(
         "Error in user repository when fetching individual user details"
@@ -107,7 +132,7 @@ export const userRepository = {
     try {
       const data = await Chat.findAll({
         where: { group_id },
-        attributes: ["message", "createdAt"],
+        attributes: ["message", "createdAt","receiver_id","group_id"],
 
         include: [
           {

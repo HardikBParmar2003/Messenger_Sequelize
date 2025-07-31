@@ -1,15 +1,15 @@
 import Transaction from "sequelize/types/transaction";
-import {  Member } from "../models";
+import { Member } from "../models";
 
 export const memberRepository = {
-  async addUser(data: Member,options?: { transaction?: Transaction }) {
+  async addUser(data: Member, options?: { transaction?: Transaction }) {
     try {
       const isExist = await Member.findOne({
         where: {
           group_id: data.group_id,
           admin_id: data.admin_id,
           user_id: data.user_id,
-          role_id:data.role_id
+          role_id: data.role_id,
         },
       });
       if (isExist) {
@@ -22,12 +22,12 @@ export const memberRepository = {
     }
   },
 
-  async removeUser(user_id: number,group_id:number) {
+  async removeUser(user_id: number, group_id: number) {
     try {
       return await Member.destroy({
         where: {
           user_id,
-          group_id
+          group_id,
         },
       });
     } catch (error) {
@@ -35,13 +35,12 @@ export const memberRepository = {
     }
   },
 
-  async getUser(user_id: number,group_id:number) {
+  async getUser(user_id: number, group_id: number) {
     try {
       return await Member.findOne({
         where: {
-        user_id,
-        group_id
-
+          user_id,
+          group_id,
         },
       });
     } catch (error) {
@@ -49,30 +48,27 @@ export const memberRepository = {
     }
   },
 
-  async findAllUser(group_id:number){
+  async findAllUser(group_id: number) {
     try {
       return await Member.findAll({
-        where:{
-          group_id
-        }
-      })
+        where: {
+          group_id,
+        },
+      });
     } catch (error) {
-      throw new Error("Error while fetching all users of a group")
-      
+      throw new Error("Error while fetching all users of a group");
     }
   },
 
-  async updateMemberData(data:Member,group_id:number){
+  async updateMemberData(data: Member, group_id: number) {
     try {
-      return await Member.update(data,{
-        where:{
-          group_id
-        }
-      })
+      return await Member.update(data, {
+        where: {
+          group_id,
+        },
+      });
     } catch (error) {
-      throw new Error("Error while trying to update admin")
-      
+      throw new Error("Error while trying to update admin");
     }
-
-  }
+  },
 };

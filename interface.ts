@@ -1,3 +1,6 @@
+import { number } from "joi";
+import { User } from "./src/models";
+
 export interface userData {
   first_name: string;
   last_name: string;
@@ -9,4 +12,8 @@ export interface Chat {
     receiver_id:number;
     message: string;
     createdAt: Date;
+  }
+
+  export interface findUserType{
+    rows: User[]; count: number
   }

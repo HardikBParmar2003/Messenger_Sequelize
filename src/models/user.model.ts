@@ -8,7 +8,6 @@ import {
   CreatedAt,
   UpdatedAt,
   HasMany,
-  ForeignKey,
   BelongsToMany,
 } from "sequelize-typescript";
 import { Group } from "./group.model";
@@ -39,7 +38,7 @@ export class User extends Model<User> {
     allowNull: false,
     unique: "unique_email_constraint",
     validate: {
-      isEmail: true, // Must be a valid email
+      isEmail: true, // must be a valid email
     },
   })
   email!: string;

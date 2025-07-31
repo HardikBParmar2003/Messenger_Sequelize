@@ -82,7 +82,7 @@ export const statusRepository = {
         `SELECT user_id,first_name,last_name,profile_photo FROM users WHERE user_id in (SELECT user_id FROM status_table WHERE user_id in (SELECT receiver_id FROM chat_table WHERE sender_id = ? AND receiver_id is NOT NULL UNION SELECT sender_id FROM chat_table WHERE receiver_id = ? AND sender_id is NOT NULL) AND "expiresAt" > ?) AND (first_name iLike ? or last_name iLike ? )`,
 
         {
-          replacements: [user_id, user_id, now, `%${value}%`,`%${value}%`],
+          replacements: [user_id, user_id, now, `%${value}%`, `%${value}%`],
           type: QueryTypes.SELECT,
         }
       );
@@ -94,7 +94,7 @@ export const statusRepository = {
 
   async getStatus(status_id: number) {
     try {
-      return await Status.findByPk(status_id, {});
+      return await Status.findByPk(status_id);
     } catch (error) {
       throw new Error("Error while fetching status");
     }

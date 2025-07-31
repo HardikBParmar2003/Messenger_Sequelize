@@ -31,7 +31,7 @@ export const sendEmail = {
           pass: "vkpq qkmo mhvk ovzb",
         },
       });
-
+      console.log("transporter is:",transporter);
       return await transporter.sendMail({
         from: "projectmanagement760@gmail.com",
         to: email,

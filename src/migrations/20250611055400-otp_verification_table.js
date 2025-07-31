@@ -1,8 +1,4 @@
 "use strict";
-
-const { allowedNodeEnvironmentFlags } = require("process");
-const { DataType, UpdatedAt } = require("sequelize-typescript");
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -15,7 +11,7 @@ module.exports = {
       },
       email: {
         type: Sequelize.STRING,
-      },
+      }, 
       otp: {
         type: Sequelize.STRING,
       },

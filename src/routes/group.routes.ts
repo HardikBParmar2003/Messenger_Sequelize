@@ -29,5 +29,8 @@ groupRouter.post(
     groupController.updateGroupData
   );
 
+  groupRouter.get("/getGroupDetail/:group_id",userMiddleware.isAuthorizedUser,groupController.getGroupData)
+  groupRouter.get("/getgroupUser/:group_id",userMiddleware.isAuthorizedUser,groupController.getGroupUsers)
+
   groupRouter.delete("/deleteGroup/:group_id",userMiddleware.isAuthorizedUser,permissionMiddleware.deletePermission,groupController.deleteGroup)
 

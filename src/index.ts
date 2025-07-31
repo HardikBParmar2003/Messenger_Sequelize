@@ -9,37 +9,72 @@ import { groupRouter } from "./routes/group.routes";
 import { memberRouter } from "./routes/member.routes";
 import { statusRouter } from "./routes/status.routes";
 import { callRouter } from "./routes/call.routes";
-// import { callWebSocket } from "./webSocket/webSignal";
-// import http from 'http'
+import { Server } from "socket.io";
+import http from "http";
+import cors from "cors";
+import socketTest from "./controller/socket.controller";
+
 
 const app = express();
+// app.use(
+//   cors({
+//     origin: process.env.FRONTEND_URL,
+//     credentials: true,
+//   })
+// );
+
+
+app.use(
+  cors({
+    origin: "*",
+  methods: 'GET,POST,PUT,DELETE,OPTIONS',
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization',
+    'x-user-id',
+    'Accept',
+    'Origin',
+    'X-Requested-With',
+    'Access-Control-Allow-Origin'
+  ],
+  credentials: true,
+  })
+);
+
+
 app.use(express.json());
-// const webSocketServer = http.createServer(app)
-// callWebSocket.webSocketSetup(webSocketServer)
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  },
+});
+socketTest(io);
 
 app.use("/user", userRrouter);
-app.use("/chat",chatRouter);
-app.use("/group",groupRouter);
-app.use("/member",memberRouter);
-app.use("/status",statusRouter)
-app.use("/call",callRouter)
+app.use("/chat", chatRouter);
+app.use("/group", groupRouter);
+app.use("/member", memberRouter);
+app.use("/status", statusRouter);
+app.use("/call", callRouter);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 statusDelete();
-expiredOtpDelete()
+expiredOtpDelete();
 
 const start = async () => {
   try {
     await sequelize.authenticate();
     await sequelize.sync({ alter: true });
-    console.log("✅ Database connected"); 
+    console.log("✅ Database connected");
 
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running on http://localhost:${PORT}`);
+    server.listen(PORT, () => {
+      console.log(`🚀 Server running on ${PORT}`);
     });
   } catch (err) {
-    console.error("❌ Failed to start app:", err);
+  console.error("❌ Failed to start app:", err);
   }
 };
 

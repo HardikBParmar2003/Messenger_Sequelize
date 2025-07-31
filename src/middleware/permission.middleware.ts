@@ -4,6 +4,7 @@ import { groupRepository } from "../repositories/group.repositories";
 import { memberRepository } from "../repositories/member.repositories";
 import { userRepository } from "../repositories/user.repositories";
 import { Group, Member, User } from "../models";
+import { date } from "joi";
 
 export const permissionMiddleware = {
   async deletePermission(req: Request, res: Response, next: NextFunction) {
@@ -46,7 +47,7 @@ export const permissionMiddleware = {
           .json({ data: null, message: "No group exist bad request" });
       }
     } catch (error) {
-      res.status(500).json("Something Went Wrong");
+      res.status(500).json({data:null, message:"Something Went Wrong"});
     }
   },
 
@@ -93,7 +94,7 @@ export const permissionMiddleware = {
           .json({ data: null, message: "No group exist bad request" });
       }
     } catch (error) {
-      res.status(500).json("Something Went Wrong");
+      res.status(500).json({ data: null, message: "something went wrong" });
     }
   },
 
@@ -151,7 +152,7 @@ export const permissionMiddleware = {
               .json({ data: null, message: "No member present bad request" });
           }
         } else {
-          res.status(400).json({ message: "No group exist bad request" });
+          res.status(400).json({data:null, message: "No group exist bad request" });
         }
       } else {
         res
@@ -159,7 +160,7 @@ export const permissionMiddleware = {
           .json({ data: null, message: "No user exist bad request" });
       }
     } catch (error) {
-      res.status(500).json("Something Went Wrong");
+      res.status(500).json({ data: null, message: "something went wrong" });
     }
   },
 
@@ -213,7 +214,7 @@ export const permissionMiddleware = {
           .json({ data: null, message: "User does not exist bad request" });
       }
     } catch (error) {
-      res.status(500).json("Something Went Wrong");
+      res.status(500).json({ data: null, message: "somethhing went wrong" });
     }
   },
 };

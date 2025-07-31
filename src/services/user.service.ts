@@ -31,7 +31,6 @@ export const userService = {
       }
     } catch (error) {
       throw new Error("Error while sinding email");
-      ``;
     }
   },
 
@@ -51,7 +50,8 @@ export const userService = {
         last_name: data.last_name,
         email: email,
         password: password,
-        profile_photo:'https://res.cloudinary.com/duy1xfupo/image/upload/v1751265813/hardik/qnibi07eosueazvthvfz.png'
+        profile_photo:
+          "https://res.cloudinary.com/duy1xfupo/image/upload/v1751265813/hardik/qnibi07eosueazvthvfz.png",
       };
       return userRepository.create(userData as User);
     } catch (error) {
@@ -63,7 +63,7 @@ export const userService = {
     try {
       const userData = await userRepository.logIn(data);
       if (userData) {
-        const password:string = userData?.password
+        const password: string = userData?.password;
         const userPassword = String(data.password);
         const isUser: boolean = await bcrypt.compare(userPassword, password);
         if (isUser) {
@@ -77,7 +77,8 @@ export const userService = {
             process.env.SECRET_KEY as string,
             { expiresIn: "1h" }
           );
-          return jwtToken;
+          
+          return {jwtToken,userData};
         } else {
           return false;
         }
@@ -97,6 +98,13 @@ export const userService = {
     }
   },
 
+  async getAllUser(user_id: number) {
+    try {
+      return await userRepository.getAllUser(user_id);
+    } catch (error) {
+      throw new Error("Error Occured while fetching users");
+    }
+  },
   async getIndividualUser(user_id: number) {
     try {
       return await userRepository.getIndividualUser(user_id);
@@ -115,12 +123,12 @@ export const userService = {
 
   async updateUser(data: User, file: string, user_id: number) {
     try {
-      const data2 = {
+      const userData = {
         first_name: data?.first_name,
         last_name: data?.last_name,
         profile_photo: file,
       };
-      return await userRepository.updateUser(data2 as User, user_id);
+      return await userRepository.updateUser(userData as User, user_id);
     } catch (error) {
       throw new Error("Error while updating user details");
     }

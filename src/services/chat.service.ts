@@ -44,18 +44,7 @@ export const chatService = {
   async getAllChattingUser(user_id: number) {
     try {
       const data = await chatRepository.getAllChattingUser(user_id);
-      const uniqueUser:Map<number,User> = new Map();
-      data.forEach((chat) => {
-        const otherUserData =
-          chat.sender.user_id === user_id ? chat.receiver : chat.sender;
-        if (
-          otherUserData.user_id != user_id &&
-          !uniqueUser.has(otherUserData.user_id)
-        ) {
-          uniqueUser.set(otherUserData.user_id, otherUserData);
-        }
-      });
-      return Array.from(uniqueUser.values());
+      return data
     } catch (error) {
       throw new Error("Error while fetching chat user data");
     }
