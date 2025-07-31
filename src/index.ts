@@ -16,12 +16,32 @@ import socketTest from "./controller/socket.controller";
 
 
 const app = express();
+// app.use(
+//   cors({
+//     origin: process.env.FRONTEND_URL,
+//     credentials: true,
+//   })
+// );
+
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
-    credentials: true,
+    origin: "*",
+  methods: 'GET,POST,PUT,DELETE,OPTIONS',
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization',
+    'x-user-id',
+    'Accept',
+    'Origin',
+    'X-Requested-With',
+    'Access-Control-Allow-Origin'
+  ],
+  credentials: true,
   })
 );
+
+
 app.use(express.json());
 const server = http.createServer(app);
 const io = new Server(server, {
