@@ -14,6 +14,7 @@ import http from "http";
 import cors from "cors";
 import socketTest from "./controller/socket.controller";
 console.log("DATABASE_URL:", process.env.DATABASE_URL);
+console.log("DATABASE_URL:", process.env.PORT);
 
 const app = express();
 app.use(
