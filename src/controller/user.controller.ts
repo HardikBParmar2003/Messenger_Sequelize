@@ -16,6 +16,8 @@ export const userController = {
       if (data) {
         res.cookie("user_email", req.body.email, {
           maxAge: 5 * 60 * 1000,
+          httpOnly: true, // Can't be accessed from JavaScript (for security)
+          sameSite: "strict", // For cross-origin requests (CORS)
         });
         res.status(200).json({
           data,
