@@ -39,7 +39,7 @@ app.use("/status", statusRouter);
 app.use("/call", callRouter);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 10000;
 statusDelete();
 expiredOtpDelete();
 
