@@ -649,7 +649,6 @@ userRrouter.get(
 
 userRrouter.get(
   "/getToken",
-  userMiddleware.isAuthorizedUser,
   userController.getToken
 );
 

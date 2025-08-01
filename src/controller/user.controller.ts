@@ -6,8 +6,7 @@ import { Chat, Otp, User } from "../models";
 import { userRepository } from "../repositories/user.repositories";
 import { findUserType } from "../../interface";
 import { groupService } from "../services/group.service";
-import { use } from "react";
-import { dash } from "pdfkit";
+
 
 export const userController = {
   async requestOTp(req: Request, res: Response): Promise<void> {
@@ -254,11 +253,11 @@ export const userController = {
   },
   async getToken(req: Request, res: Response) {
     try {
-      const user = req.user;
+      const user = req.cookies.jwt_token;
       if (user) {
         res.status(200).json({ data: true, message: "verified user" });
       } else {
-        res.status(401).json({ data: false, message: "unverified user" });
+        res.status(200).json({ data: false, message: "unverified user" });
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
@@ -270,7 +269,7 @@ export const userController = {
       if (email) {
         res.status(200).json({ data: true, message: "user has email" });
       } else {
-        res.status(401).json({ data: false, message: "user has not email" });
+        res.status(200).json({ data: false, message: "user has not email" });
       }
     } catch (error) {
       res.status(500).json({ data: null, message: error });
