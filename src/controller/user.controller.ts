@@ -7,7 +7,6 @@ import { userRepository } from "../repositories/user.repositories";
 import { findUserType } from "../../interface";
 import { groupService } from "../services/group.service";
 
-
 export const userController = {
   async requestOTp(req: Request, res: Response): Promise<void> {
     try {
@@ -17,7 +16,7 @@ export const userController = {
           maxAge: 5 * 60 * 1000,
           httpOnly: true, // Can't be accessed from JavaScript (for security)
           sameSite: "none", // For cross-origin requests (CORS)
-          secure:true
+          secure: true,
         });
         res.status(200).json({
           data,
@@ -61,7 +60,11 @@ export const userController = {
     try {
       const email: string = req.cookies.user_email;
       const userData: User = await userService.create(req.body, email);
-      res.clearCookie("user_email");
+      res.clearCookie("user_email", {
+        httpOnly: true, // Can't be accessed from JavaScript (for security)
+        sameSite: "none", // For cross-origin requests (CORS)
+        secure: true,
+      });
       res
         .status(201)
         .json({ data: userData, message: "User created successfully" });
@@ -82,7 +85,7 @@ export const userController = {
           maxAge: 60 * 60 * 1000, // 1 hour
           httpOnly: true, // Can't be accessed from JavaScript (for security)
           sameSite: "none", // For cross-origin requests (CORS)
-          secure:true
+          secure: true,
         });
         res.status(200).json({ data: isUser, message: "Successfull login" });
       } else {
@@ -191,7 +194,12 @@ export const userController = {
 
   async logOutUser(req: Request, res: Response) {
     try {
-      res.clearCookie("jwt_token");
+      res.clearCookie("jwt_token", {
+        httpOnly: true,
+        sameSite: "none",
+        secure: true,
+      });
+
       res.status(200).json({ data: null, message: "Successfully log out" });
     } catch (error) {
       res.status(500).json({ data: null, message: error });
@@ -255,7 +263,7 @@ export const userController = {
   },
   async getToken(req: Request, res: Response) {
     try {
-      const user = req.cookies.jwt_token;      
+      const user = req.cookies.jwt_token;
       if (user) {
         res.status(200).json({ data: true, message: "verified user" });
       } else {
