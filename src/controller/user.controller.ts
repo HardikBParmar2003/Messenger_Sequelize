@@ -16,7 +16,8 @@ export const userController = {
         res.cookie("user_email", req.body.email, {
           maxAge: 5 * 60 * 1000,
           httpOnly: true, // Can't be accessed from JavaScript (for security)
-          sameSite: "strict", // For cross-origin requests (CORS)
+          sameSite: "none", // For cross-origin requests (CORS)
+          secure:true
         });
         res.status(200).json({
           data,
@@ -80,7 +81,8 @@ export const userController = {
         res.cookie("jwt_token", isUser.jwtToken, {
           maxAge: 60 * 60 * 1000, // 1 hour
           httpOnly: true, // Can't be accessed from JavaScript (for security)
-          sameSite: "strict", // For cross-origin requests (CORS)
+          sameSite: "none", // For cross-origin requests (CORS)
+          secure:true
         });
         res.status(200).json({ data: isUser, message: "Successfull login" });
       } else {
@@ -253,7 +255,7 @@ export const userController = {
   },
   async getToken(req: Request, res: Response) {
     try {
-      const user = req.cookies.jwt_token;
+      const user = req.cookies.jwt_token;      
       if (user) {
         res.status(200).json({ data: true, message: "verified user" });
       } else {
