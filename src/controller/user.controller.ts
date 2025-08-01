@@ -267,7 +267,7 @@ export const userController = {
   },
   async getEmail(req: Request, res: Response) {
     try {
-      const email = req.cookies.email;
+      const email = req.cookies.user_email;
       if (email) {
         res.status(200).json({ data: true, message: "user has email" });
       } else {
