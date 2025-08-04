@@ -19,7 +19,7 @@ export const userController = {
           secure: true,
         });
         res.status(200).json({
-          data,
+          data:req.body.email,
           message: `Mail sent to ${req.body.email} successfully `,
         });
       } else {
