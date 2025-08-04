@@ -42,3 +42,6 @@ statusRouter.get(
   userMiddleware.isAuthorizedUser,
   statusController.searchStatus
 );
+
+
+// This is status routes file !!!
