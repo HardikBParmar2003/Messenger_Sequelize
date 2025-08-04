@@ -44,4 +44,3 @@ statusRouter.get(
 );
 
 
-// This is status routes file !!!
