@@ -653,3 +653,7 @@ userRrouter.get(
 );
 
 userRrouter.get("/getEmail",userController.getEmail)
+
+userRrouter.get("/getRole",userController.getRole)
+
+

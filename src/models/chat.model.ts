@@ -48,7 +48,7 @@ export class Chat extends Model<Chat> {
   @BelongsTo(() => Group, { foreignKey: "group_id" })
   group!: Group;
 
-  @Column(DataType.STRING)
+  @Column(DataType.TEXT)
   message!: string;
 
   @CreatedAt

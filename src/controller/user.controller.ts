@@ -285,4 +285,14 @@ export const userController = {
       res.status(500).json({ data: null, message: error });
     }
   },
+
+  async getRole(req:Request,res:Response){
+    try {
+      const data = await userRepository.getRole()
+      res.status(200).json({data:data,message:"role"})
+    } catch (error) {
+      res.status(500).json({ data: null, message: error });
+      
+    }
+  },
 };

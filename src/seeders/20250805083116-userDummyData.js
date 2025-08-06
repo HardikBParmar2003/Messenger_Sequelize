@@ -7,6 +7,39 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.bulkInsert("users", [
       {
+        first_name: "Hardik",
+        last_name: "Parmar",
+        email: "hardik@gmail.com",
+        profile_photo:
+          "https://res.cloudinary.com/duy1xfupo/image/upload/v1750395523/hardik/tzeafcd1ik2ldozmlqb3.jpg",
+        password:
+          "$2b$10$BkdSrx6w5t7AhkfOJQ/ze.Lm6IbCgw0Qemu7ajxDVNtSlm9eLZfXu",
+        createdAt: "2025-06-25 11:10:28.359+05:30",
+        updatedAt: "2025-06-25 11:10:28.359+05:30",
+      },
+      {
+        first_name: "Himat",
+        last_name: "Parmar",
+        email: "himat@gmail.com",
+        profile_photo:
+          "https://res.cloudinary.com/duy1xfupo/image/upload/v1750395523/hardik/tzeafcd1ik2ldozmlqb3.jpg",
+        password:
+          "$2b$10$BkdSrx6w5t7AhkfOJQ/ze.Lm6IbCgw0Qemu7ajxDVNtSlm9eLZfXu",
+        createdAt: "2025-06-25 11:10:28.359+05:30",
+        updatedAt: "2025-06-25 11:10:28.359+05:30",
+      },
+      {
+        first_name: "Mann",
+        last_name: "Shah",
+        email: "shah@gmail.com",
+        profile_photo:
+          "https://res.cloudinary.com/duy1xfupo/image/upload/v1750395523/hardik/tzeafcd1ik2ldozmlqb3.jpg",
+        password:
+          "$2b$10$BkdSrx6w5t7AhkfOJQ/ze.Lm6IbCgw0Qemu7ajxDVNtSlm9eLZfXu",
+        createdAt: "2025-06-25 11:10:28.359+05:30",
+        updatedAt: "2025-06-25 11:10:28.359+05:30",
+      },
+      {
         first_name: "Umang",
         last_name: "Makwana",
         email: "umang@gmail.com",

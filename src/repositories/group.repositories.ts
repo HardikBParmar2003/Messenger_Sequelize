@@ -100,6 +100,7 @@ export const groupRepository = {
         paranoid:true
       });
     } catch (error) {
+      console.log("error is:",error);
       throw new Error("Error while checking group");
     }
   },

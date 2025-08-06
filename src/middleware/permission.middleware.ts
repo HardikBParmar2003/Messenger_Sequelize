@@ -4,7 +4,6 @@ import { groupRepository } from "../repositories/group.repositories";
 import { memberRepository } from "../repositories/member.repositories";
 import { userRepository } from "../repositories/user.repositories";
 import { Group, Member, User } from "../models";
-import { date } from "joi";
 
 export const permissionMiddleware = {
   async deletePermission(req: Request, res: Response, next: NextFunction) {

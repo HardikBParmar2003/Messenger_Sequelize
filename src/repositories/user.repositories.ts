@@ -1,4 +1,4 @@
-import { Chat, Otp, User } from "../models";
+import { Chat, Otp, Permission, Role, RolePermission, User } from "../models";
 import { Op } from "sequelize";
 import { Request } from "express";
 import { findUserType } from "../../interface";
@@ -169,6 +169,15 @@ export const userRepository = {
       });
     } catch (error) {
       throw new Error("User not found with this email");
+    }
+  },
+
+  async getRole(){
+    try {
+      return await RolePermission.findAll()
+    } catch (error) {
+      throw new Error("User not found with this email");
+      
     }
   },
 };

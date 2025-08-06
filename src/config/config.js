@@ -1,4 +1,4 @@
-require("dotenv").config(); // make sure to load .env
+require("dotenv").config();
 
 module.exports = {
   development: {
@@ -21,7 +21,7 @@ module.exports = {
     dialectOptions: {
       ssl: {
         require: true,
-        rejectUnauthorized: false, // important for Railway
+        rejectUnauthorized: false, // allows self-signed or unverified certs
       },
     },
   },
