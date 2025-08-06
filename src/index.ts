@@ -50,7 +50,6 @@ expiredOtpDelete();
 const start = async () => {
   try {
     await sequelize.authenticate();
-    await sequelize.sync({ alter: true });
     console.log("✅ Database connected");
 
     server.listen(PORT, () => {
