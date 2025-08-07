@@ -12,12 +12,11 @@ import { callRouter } from "./routes/call.routes";
 import { Server } from "socket.io";
 import http from "http";
 import cors from "cors";
-
-
-const allowedOrigin = [process.env.FRONTEND_URL, process.env.MESSENGER_URL];
-
+import socketTest from "./controller/socket.controller";
 
 const app = express();
+
+const allowedOrigin = [process.env.FRONTEND_URL];
 
 app.use(
   cors({
@@ -48,22 +47,8 @@ const io = new Server(server, {
     credentials: true,
   },
 });
-// app.use(
-//   cors({
-//     origin: process.env.FRONTEND_URL,
-//     credentials: true,
-//   })
-// );
+socketTest(io);
 
-// app.use(express.json());
-// const server = http.createServer(app);
-// const io = new Server(server, {
-//   cors: {
-//     origin: process.env.FRONTEND_URL,
-//     credentials: true,
-//   },
-// });
-// socketTest(io);
 
 app.use("/user", userRrouter);
 app.use("/chat", chatRouter);
