@@ -49,23 +49,6 @@ const io = new Server(server, {
 });
 socketTest(io);
 
-// app.use(
-//   cors({
-//     origin: process.env.FRONTEND_URL,
-//     credentials: true,
-//   })
-// );
-
-// app.use(express.json());
-// const server = http.createServer(app);
-// const io = new Server(server, {
-//   cors: {
-//     origin: process.env.FRONTEND_URL,
-//     credentials: true,
-//   },
-// });
-// socketTest(io);
-
 app.use("/user", userRrouter);
 app.use("/chat", chatRouter);
 app.use("/group", groupRouter);
