@@ -1,6 +1,5 @@
 import { Table, Model, PrimaryKey, AutoIncrement, Column, DataType, ForeignKey, BelongsTo, CreatedAt, UpdatedAt } from "sequelize-typescript";
 import { User } from "./user.model";
-import { allow } from "joi";
 
 export enum callStatus{
   started = 'started',

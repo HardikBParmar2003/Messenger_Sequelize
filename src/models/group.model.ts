@@ -1,4 +1,3 @@
-import { allow } from "joi";
 import {
   Table,
   Model,
@@ -17,7 +16,6 @@ import {
 import { User } from "./user.model";
 import { Member } from "./group_member_table.model";
 import { Chat } from "./chat.model";
-import { Col } from "sequelize/types/utils";
 
 @Table({ tableName: "group_table", timestamps: true, paranoid: true })
 export class Group extends Model<Group> {

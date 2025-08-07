@@ -13,26 +13,57 @@ import { Server } from "socket.io";
 import http from "http";
 import cors from "cors";
 import socketTest from "./controller/socket.controller";
+import { func } from "joi";
 
+const allowedOrigin = [process.env.FRONTEND_URL, process.env.MESSENGER_URl];
 
 const app = express();
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigin.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error("Origin not allowed by cors"));
+      }
+    },
     credentials: true,
   })
 );
-
 
 app.use(express.json());
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND_URL,
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigin.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error("Origin not allowed by cors"));
+      }
+    },
     credentials: true,
   },
 });
-socketTest(io);
+// app.use(
+//   cors({
+//     origin: process.env.FRONTEND_URL,
+//     credentials: true,
+//   })
+// );
+
+// app.use(express.json());
+// const server = http.createServer(app);
+// const io = new Server(server, {
+//   cors: {
+//     origin: process.env.FRONTEND_URL,
+//     credentials: true,
+//   },
+// });
+// socketTest(io);
 
 app.use("/user", userRrouter);
 app.use("/chat", chatRouter);
@@ -50,13 +81,14 @@ expiredOtpDelete();
 const start = async () => {
   try {
     await sequelize.authenticate();
+    await sequelize.sync({ alter: true });
     console.log("✅ Database connected");
 
     server.listen(PORT, () => {
       console.log(`🚀 Server running on ${PORT}`);
     });
   } catch (err) {
-  console.error("❌ Failed to start app:", err);
+    console.error("❌ Failed to start app:", err);
   }
 };
 
