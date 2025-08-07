@@ -12,10 +12,11 @@ import { callRouter } from "./routes/call.routes";
 import { Server } from "socket.io";
 import http from "http";
 import cors from "cors";
-import socketTest from "./controller/socket.controller";
-import { func } from "joi";
 
-const allowedOrigin = [process.env.FRONTEND_URL, process.env.MESSENGER_URl];
+
+const allowedOrigin = [process.env.FRONTEND_URL, process.env.MESSENGER_URL];
+
+console.log("allowed origin is:",allowedOrigin);
 
 const app = express();
 
