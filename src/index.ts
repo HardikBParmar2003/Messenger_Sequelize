@@ -16,7 +16,6 @@ import cors from "cors";
 
 const allowedOrigin = [process.env.FRONTEND_URL, process.env.MESSENGER_URL];
 
-console.log("allowed origin is:",allowedOrigin);
 
 const app = express();
 
@@ -83,6 +82,7 @@ const start = async () => {
   try {
     await sequelize.authenticate();
     await sequelize.sync({ alter: true });
+
     console.log("✅ Database connected");
 
     server.listen(PORT, () => {
